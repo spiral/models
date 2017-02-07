@@ -20,10 +20,9 @@ class SchematicEntity extends AbstractEntity
     /**
      * Schema constants. Starts with 2, but why not?
      */
-    const SH_HIDDEN   = 2;
-    const SH_SECURED  = 3;
-    const SH_FILLABLE = 4;
-    const SH_MUTATORS = 5;
+    const SH_SECURED  = 2;
+    const SH_FILLABLE = 3;
+    const SH_MUTATORS = 4;
 
     /**
      * Behaviour schema.
@@ -40,14 +39,6 @@ class SchematicEntity extends AbstractEntity
     {
         $this->schema = $schema;
         parent::__construct($data);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPublic(string $field): bool
-    {
-        return !in_array($field, $this->schema[self::SH_HIDDEN]);
     }
 
     /**

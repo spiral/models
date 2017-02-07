@@ -19,15 +19,6 @@ use Spiral\Models\Prototypes\AbstractEntity;
 class DynamicEntity extends AbstractEntity
 {
     /**
-     * List of fields must be hidden from publicFields() method.
-     *
-     * @see publicValue()
-     *
-     * @var array
-     */
-    protected $hidden = [];
-
-    /**
      * Set of fields allowed to be filled using setFields() method.
      *
      * @see setFields()
@@ -72,14 +63,6 @@ class DynamicEntity extends AbstractEntity
      * @var array
      */
     protected $accessors = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPublic(string $field): bool
-    {
-        return !in_array($field, $this->hidden);
-    }
 
     /**
      * Check if field can be set using setFields() method.

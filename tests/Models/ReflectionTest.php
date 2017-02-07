@@ -65,17 +65,6 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testHidden()
-    {
-        $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertSame(
-            [
-                'value'
-            ],
-            $schema->getHidden()
-        );
-    }
-
     public function testDeclaredMethods()
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
@@ -96,8 +85,6 @@ class TestModel extends SchematicEntity
     protected $getters = ['value' => 'intval'];
 
     protected $secured = '*';
-
-    protected $hidden = ['value'];
 
     protected function methodA()
     {

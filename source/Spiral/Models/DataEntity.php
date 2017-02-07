@@ -17,15 +17,6 @@ use Spiral\Models\Prototypes\AbstractEntity;
 class DataEntity extends AbstractEntity
 {
     /**
-     * List of fields must be hidden from publicFields() method.
-     *
-     * @see publicValue()
-     *
-     * @var array
-     */
-    const HIDDEN = [];
-
-    /**
      * Set of fields allowed to be filled using setFields() method.
      *
      * @see setFields()
@@ -70,14 +61,6 @@ class DataEntity extends AbstractEntity
      * @var array
      */
     const ACCESSORS = [];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isPublic(string $field): bool
-    {
-        return !in_array($field, static::HIDDEN);
-    }
 
     /**
      * Check if field can be set using setFields() method.

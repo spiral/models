@@ -86,14 +86,6 @@ class ReflectionEntity
     /**
      * @return array
      */
-    public function getHidden(): array
-    {
-        return array_unique((array)$this->getProperty('hidden', true));
-    }
-
-    /**
-     * @return array
-     */
     public function getSetters(): array
     {
         return $this->getMutators()[AbstractEntity::MUTATOR_SETTER];

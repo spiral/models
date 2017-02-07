@@ -12,7 +12,6 @@ use Spiral\Models\AccessorInterface;
 use Spiral\Models\EntityInterface;
 use Spiral\Models\Exceptions\AccessExceptionInterface;
 use Spiral\Models\Exceptions\EntityException;
-use Spiral\Models\PublishableInterface;
 use Spiral\Models\Traits\EventsTrait;
 
 /**
@@ -22,8 +21,7 @@ abstract class AbstractEntity extends MutableObject implements
     EntityInterface,
     \JsonSerializable,
     \IteratorAggregate,
-    AccessorInterface,
-    PublishableInterface
+    AccessorInterface
 {
     use EventsTrait;
 
@@ -301,33 +299,6 @@ abstract class AbstractEntity extends MutableObject implements
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * Include every composition public data into result.
-     */
-    public function publicValue(): array
-    {
-        $result = [];
-
-        foreach ($this->getKeys() as $field) {
-            if (!$this->isPublic($field)) {
-                //We might need to use isset in future, for performance, for science
-                continue;
-            }
-
-            $value = $this->getField($field);
-
-            if ($value instanceof PublishableInterface) {
-                $result[$field] = $value->publicValue();
-            } else {
-                $result[$field] = $value;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * Alias for packFields.
      *
      * @return array
@@ -344,7 +315,7 @@ abstract class AbstractEntity extends MutableObject implements
      */
     public function jsonSerialize()
     {
-        return $this->publicValue();
+        return $this->packValue();
     }
 
     /**
@@ -362,15 +333,6 @@ abstract class AbstractEntity extends MutableObject implements
     {
         $this->fields = [];
     }
-
-    /**
-     * Indication that field in public and can be presented in published data.
-     *
-     * @param string $field
-     *
-     * @return bool
-     */
-    abstract protected function isPublic(string $field): bool;
 
     /**
      * Check if field is fillable.
