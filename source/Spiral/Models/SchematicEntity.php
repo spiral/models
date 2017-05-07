@@ -38,6 +38,7 @@ class SchematicEntity extends AbstractEntity
     public function __construct(array $data, array $schema)
     {
         $this->schema = $schema;
+
         parent::__construct($data);
     }
 
@@ -50,12 +51,12 @@ class SchematicEntity extends AbstractEntity
             return true;
         }
 
-        if ($this->schema[self::SH_SECURED] === '*') {
-            return false;
-        }
-
         if (!empty($this->schema[self::SH_FILLABLE])) {
             return in_array($field, $this->schema[self::SH_FILLABLE]);
+        }
+
+        if ($this->schema[self::SH_SECURED] === '*') {
+            return false;
         }
 
         return !in_array($field, $this->schema[self::SH_SECURED]);
