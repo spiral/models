@@ -46,12 +46,16 @@ class SchematicEntity extends AbstractEntity
      */
     protected function isFillable(string $field): bool
     {
-        if (!empty($this->schema[self::SH_FILLABLE])) {
-            return in_array($field, $this->schema[self::SH_FILLABLE]);
+        if ($this->schema[self::SH_FILLABLE] === '*') {
+            return true;
         }
 
         if ($this->schema[self::SH_SECURED] === '*') {
             return false;
+        }
+
+        if (!empty($this->schema[self::SH_FILLABLE])) {
+            return in_array($field, $this->schema[self::SH_FILLABLE]);
         }
 
         return !in_array($field, $this->schema[self::SH_SECURED]);
