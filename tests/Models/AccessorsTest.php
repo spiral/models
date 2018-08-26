@@ -52,6 +52,8 @@ class AccessorsTest extends TestCase
         $this->assertEquals([
             'name' => new NameAccessor(null)
         ], $e->getFields());
+
+        $e->setFields(null);
     }
 
     public function testReflection()
