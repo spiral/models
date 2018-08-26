@@ -165,10 +165,12 @@ class DataEntityTest extends TestCase
     public function testGetters()
     {
         $entity = new GetEntity(['id' => []]);
+        $this->assertSame(0, $entity->id);
 
         $this->assertEquals([
             'id' => 0
         ], $entity->getFields());
+
     }
 }
 
