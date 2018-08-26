@@ -17,7 +17,7 @@ use Spiral\Models\Traits\EventsTrait;
  */
 abstract class AbstractEntity extends MutableObject implements
     EntityInterface,
-    ValueInterface,
+    AccessorInterface,
     \IteratorAggregate
 {
     use EventsTrait;
@@ -57,7 +57,7 @@ abstract class AbstractEntity extends MutableObject implements
      */
     public function setField(string $name, $value, bool $filter = true)
     {
-        if ($value instanceof ValueInterface) {
+        if ($value instanceof AccessorInterface) {
             //In case of non scalar values filters must be bypassed (check accessor compatibility?)
             $this->fields[$name] = clone $value;
 
@@ -94,7 +94,7 @@ abstract class AbstractEntity extends MutableObject implements
     {
         $value = $this->hasField($name) ? $this->fields[$name] : $default;
 
-        if ($value instanceof ValueInterface || (is_null($value) && $this->isNullable($name))) {
+        if ($value instanceof AccessorInterface || (is_null($value) && $this->isNullable($name))) {
             //Direct access to value when value is accessor or null and declared as nullable
             return $value;
         }
@@ -268,7 +268,7 @@ abstract class AbstractEntity extends MutableObject implements
     {
         $result = [];
         foreach ($this->fields as $field => $value) {
-            if ($value instanceof ValueInterface) {
+            if ($value instanceof AccessorInterface) {
                 $result[$field] = $value->packValue();
             } else {
                 $result[$field] = $value;
@@ -353,7 +353,7 @@ abstract class AbstractEntity extends MutableObject implements
      * @param mixed        $value
      * @param array        $context  Custom accessor context.
      *
-     * @return ValueInterface|null
+     * @return AccessorInterface|null
      *
      * @throws \Spiral\Models\Exceptions\AccessException
      * @throws EntityException
@@ -363,7 +363,7 @@ abstract class AbstractEntity extends MutableObject implements
         string $name,
         $value,
         array $context = []
-    ): ValueInterface {
+    ): AccessorInterface {
         if (!is_string($accessor) || !class_exists($accessor)) {
             throw new EntityException(
                 "Unable to create accessor for field {$name} in " . static::class
@@ -435,7 +435,7 @@ abstract class AbstractEntity extends MutableObject implements
             $field = null;
         }
 
-        if (empty($field) || !($field instanceof ValueInterface)) {
+        if (empty($field) || !($field instanceof AccessorInterface)) {
             //New field representation
             $field = $this->createAccessor($accessor, $name, $value);
 
