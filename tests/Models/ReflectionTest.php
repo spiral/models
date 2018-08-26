@@ -9,6 +9,7 @@
 namespace Spiral\Models\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Models\Events\ReflectionEvent;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Models\SchematicEntity;
 
@@ -58,12 +59,7 @@ class ReflectionTest extends TestCase
     public function testSecured()
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertSame(
-            [
-                'name'
-            ],
-            $schema->getSecured()
-        );
+        $this->assertSame(['name'], $schema->getSecured());
     }
 
     public function testDeclaredMethods()
@@ -76,15 +72,30 @@ class ReflectionTest extends TestCase
             $schema->declaredMethods()
         );
     }
+
+    public function testEvents()
+    {
+        ExtendedModel::getEventDispatcher()->addListener(
+            ReflectionEvent::EVENT,
+            function (ReflectionEvent $e) {
+                $this->assertSame('fillable', $e->getProperty());
+                $this->assertSame(['value', 'name'], $e->getValue());
+                $e->setValue(['value', 'name', 'other']);
+            }
+        );
+
+        $schema = new ReflectionEntity(ExtendedModel::class);
+        $this->assertSame(['value', 'name', 'other'], $schema->getFillable());
+
+        ExtendedModel::setEventDispatcher(null);
+    }
 }
 
 class TestModel extends SchematicEntity
 {
     protected $fillable = ['value'];
-
     protected $setters = ['value' => 'intval'];
     protected $getters = ['value' => 'intval'];
-
     protected $secured = '*';
 
     protected function methodA()
@@ -96,11 +107,8 @@ class TestModel extends SchematicEntity
 class ExtendedModel extends TestModel
 {
     protected $fillable = ['name'];
-
     protected $setters = ['name' => 'strval'];
-
     protected $getters = ['name' => 'strtoupper'];
-
     protected $secured = ['name'];
 
     protected function methodB()

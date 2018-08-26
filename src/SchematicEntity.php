@@ -93,7 +93,7 @@ class SchematicEntity extends AbstractEntity
          * @var ReflectionEvent $event
          */
         $event = static::getEventDispatcher()->dispatch(
-            'describe',
+            ReflectionEvent::EVENT,
             new ReflectionEvent($reflection, $property, $value)
         );
 

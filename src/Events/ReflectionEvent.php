@@ -16,6 +16,8 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class ReflectionEvent extends Event
 {
+    public const EVENT = 'describe';
+
     /** @var ReflectionEntity */
     private $reflection;
 
