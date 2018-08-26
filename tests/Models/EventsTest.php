@@ -55,6 +55,8 @@ class EventsTest extends TestCase
     {
         EventsTestEntity::setEventDispatcher(null);
         $class = new EventsTestEntity();
+        EventsTestEntity::resetInitiated();
+
         $this->assertInstanceOf(EntityEvent::class, $class->doSomething());
     }
 }
