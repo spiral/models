@@ -9,6 +9,7 @@
 namespace Spiral\Models\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Models\DataEntity;
 use Spiral\Models\Events\ReflectionEvent;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Models\SchematicEntity;
@@ -120,6 +121,12 @@ class ReflectionTest extends TestCase
         $schema = new ReflectionEntity(SchemaModelB::class);
         $this->assertSame(['nice', 'nice2'], $schema->getSchema());
     }
+
+    public function testGetSchemaNotSchematic()
+    {
+        $schema = new ReflectionEntity(SchemaModelC::class);
+        $this->assertSame(['nice2'], $schema->getSchema());
+    }
 }
 
 class TestModel extends SchematicEntity
@@ -154,6 +161,12 @@ class SchemaModel extends TestModel
 }
 
 class SchemaModelB extends SchemaModel
+{
+    protected $schema = ['nice2'];
+}
+
+
+class SchemaModelC extends DataEntity
 {
     protected $schema = ['nice2'];
 }
