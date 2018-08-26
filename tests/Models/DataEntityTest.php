@@ -124,7 +124,43 @@ class DataEntityTest extends TestCase
         ], $entity->packValue());
     }
 
+    public function testNullable()
+    {
+        $entity = new NullableEntity();
+        $entity->setValue([
+            'name' => 'Antony',
+            'id'   => '900'
+        ]);
 
+        $this->assertEquals([
+            'name' => 'Antony',
+            'id'   => 900
+        ], $entity->packValue());
+
+        // no filter
+        $entity->name = null;
+        $this->assertEquals([
+            'name' => null,
+            'id'   => 900
+        ], $entity->packValue());
+
+        $entity->id = null;
+        $this->assertEquals([
+            'name' => null,
+            'id'   => null
+        ], $entity->packValue());
+
+
+        $entity = new FilteredEntity();
+        $entity->setValue([
+            'name' => 'Antony',
+            'id'   => null
+        ]);
+
+        $this->assertEquals([
+            'id' => 0
+        ], $entity->packValue());
+    }
 }
 
 class PublicEntity extends DataEntity
@@ -152,4 +188,15 @@ class FilteredEntity extends DataEntity
 {
     protected const FILLABLE = ['id'];
     protected const SETTERS  = ['id' => 'intval'];
+}
+
+class NullableEntity extends DataEntity
+{
+    protected const FILLABLE = '*';
+    protected const SETTERS  = ['id' => 'intval'];
+
+    protected function isNullable(string $field): bool
+    {
+        return $field == 'id';
+    }
 }
