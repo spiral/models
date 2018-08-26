@@ -84,6 +84,27 @@ class DataEntityTest extends TestCase
         $this->assertEquals(['a' => 90], $entity->jsonSerialize());
     }
 
+    public function testSecured()
+    {
+        $entity = new SecuredEntity();
+        $entity->setValue([
+            'name' => 'Antony',
+            'id'   => '900'
+        ]);
+
+        $this->assertEquals([], $entity->packValue());
+
+        $entity = new PartiallySecuredEntity();
+        $entity->setValue([
+            'name' => 'Antony',
+            'id'   => 900
+        ]);
+
+        $this->assertEquals([
+            'id' => 900
+        ], $entity->packValue());
+    }
+
     public function testSetters()
     {
         $entity = new FilteredEntity();
@@ -102,6 +123,8 @@ class DataEntityTest extends TestCase
             'id' => 0
         ], $entity->packValue());
     }
+
+
 }
 
 class PublicEntity extends DataEntity
@@ -113,6 +136,17 @@ class PublicEntity extends DataEntity
         return parent::getKeys();
     }
 }
+
+class SecuredEntity extends DataEntity
+{
+    protected const SECURED = '*';
+}
+
+class PartiallySecuredEntity extends DataEntity
+{
+    protected const SECURED = ['name'];
+}
+
 
 class FilteredEntity extends DataEntity
 {
