@@ -83,6 +83,19 @@ class DataEntityTest extends TestCase
         $this->assertEquals(['a' => 90], $entity->toArray());
         $this->assertEquals(['a' => 90], $entity->jsonSerialize());
     }
+
+    public function testSetters()
+    {
+        $entity = new FilteredEntity();
+        $entity->setValue([
+            'name' => 'Antony',
+            'id'   => '900'
+        ]);
+
+        $this->assertEquals([
+            'id' => 900
+        ], $entity->packValue());
+    }
 }
 
 class PublicEntity extends DataEntity
@@ -93,4 +106,11 @@ class PublicEntity extends DataEntity
     {
         return parent::getKeys();
     }
+}
+
+class FilteredEntity extends DataEntity
+{
+    protected const FILLABLE = ['id'];
+
+    protected const SETTERS = ['id' => 'intval'];
 }
