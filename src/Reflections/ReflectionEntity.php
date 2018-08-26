@@ -251,14 +251,6 @@ class ReflectionEntity
     }
 
     /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->getName();
-    }
-
-    /**
      * Cloning and flushing cache.
      */
     public function __clone()
