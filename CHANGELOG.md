@@ -1,5 +1,14 @@
-CHANGELOG for 0.9.0 RC
+CHANGELOG
 ======================
+
+2.0.0 (26.08.2018)
+-----
+- deprecation of DynamicEntity
+- deprecation of packValue in favor of serializeValue
+- spiral/common dependency removed
+- phpunit version bump
+- higher test coverage
+- refactoring
 
 0.9.0 (07.02.2017)
 -----
