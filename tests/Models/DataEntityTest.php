@@ -66,6 +66,8 @@ class DataEntityTest extends TestCase
         $entity['a'] = 90;
         $this->assertEquals(['a' => 90], $entity->packValue());
         $this->assertSame(90, $entity['a']);
+        $this->assertTrue(isset($entite['a']));
+
         unset($entity['a']);
         $this->assertEquals([], $entity->packValue());
 
