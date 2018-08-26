@@ -95,6 +95,12 @@ class DataEntityTest extends TestCase
         $this->assertEquals([
             'id' => 900
         ], $entity->packValue());
+
+        $entity->id = [];
+
+        $this->assertEquals([
+            'id' => 0
+        ], $entity->packValue());
     }
 }
 
@@ -111,6 +117,5 @@ class PublicEntity extends DataEntity
 class FilteredEntity extends DataEntity
 {
     protected const FILLABLE = ['id'];
-
-    protected const SETTERS = ['id' => 'intval'];
+    protected const SETTERS  = ['id' => 'intval'];
 }
