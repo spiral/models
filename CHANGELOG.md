@@ -7,7 +7,8 @@ CHANGELOG
 - spiral/common dependency removed
 - phpunit version bump
 - higher test coverage
-- refactoring
+- minor refactoring
+- improved FILLABLE behaviour
 
 0.9.0 (07.02.2017)
 -----
