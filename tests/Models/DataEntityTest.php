@@ -8,6 +8,7 @@
 
 namespace Spiral\Models\Tests;
 
+use Mockery\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
 
@@ -170,13 +171,21 @@ class DataEntityTest extends TestCase
         $this->assertEquals([
             'id' => 0
         ], $entity->getFields());
-
     }
 }
 
 class GetEntity extends DataEntity
 {
-    protected const GETTERS = ['id' => 'intval'];
+    protected const GETTERS = ['id' => [self::class, 'filter']];
+
+    protected static function filter($v)
+    {
+        if (is_array($v)) {
+            throw new RuntimeException("can't be array");
+        }
+
+        return (int)$v;
+    }
 }
 
 class PublicEntity extends DataEntity
