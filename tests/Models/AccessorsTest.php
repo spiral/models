@@ -109,7 +109,6 @@ class NameAccessor implements AccessorInterface
         return $this->value;
     }
 
-
     public function jsonSerialize()
     {
         return $this->value;

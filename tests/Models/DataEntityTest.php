@@ -161,6 +161,20 @@ class DataEntityTest extends TestCase
             'id' => 0
         ], $entity->packValue());
     }
+
+    public function testGetters()
+    {
+        $entity = new GetEntity(['id' => []]);
+
+        $this->assertEquals([
+            'id' => 0
+        ], $entity->getFields());
+    }
+}
+
+class GetEntity extends DataEntity
+{
+    protected const GETTERS = ['id' => 'intval'];
 }
 
 class PublicEntity extends DataEntity
