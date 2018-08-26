@@ -80,6 +80,7 @@ class ReflectionTest extends TestCase
             function (ReflectionEvent $e) {
                 $this->assertSame('fillable', $e->getProperty());
                 $this->assertSame(['value', 'name'], $e->getValue());
+                $this->assertSame(ExtendedModel::class, $e->getReflection()->getName());
                 $e->setValue(['value', 'name', 'other']);
             }
         );
