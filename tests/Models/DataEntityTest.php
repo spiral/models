@@ -34,8 +34,8 @@ class DataEntityTest extends TestCase
 
     public function testPackingSimple()
     {
-        $entity = new DataEntity(['a' => 'b']);
-        $this->assertSame(['a' => 'b'], $entity->serializeValue());
+        $entity = new DataEntity(['a' => 'b', 'c' => 10]);
+        $this->assertSame(['a' => 'b', 'c' => 10], $entity->serializeValue());
     }
 
     public function testSerialize()
