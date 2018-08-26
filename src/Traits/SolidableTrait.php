@@ -30,7 +30,7 @@ trait SolidableTrait
      *
      * @return $this
      */
-    public function solidState(bool $solidState = true)
+    public function solidState(bool $solidState = true): self
     {
         $this->solidState = $solidState;
 
@@ -44,7 +44,7 @@ trait SolidableTrait
      *
      * @return bool
      */
-    public function isSolid()
+    public function isSolid(): bool
     {
         return $this->solidState;
     }

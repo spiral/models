@@ -6,12 +6,13 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\tests\Cases\Models;
+namespace Spiral\Models\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Spiral\Models\Reflections\ReflectionEntity;
 use Spiral\Models\SchematicEntity;
 
-class ReflectionTest extends \PHPUnit_Framework_TestCase
+class ReflectionTest extends TestCase
 {
     public function testReflection()
     {

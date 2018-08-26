@@ -38,7 +38,7 @@ trait EventsTrait
             return $event;
         }
 
-        return static::events()->dispatch($name, $event);
+        return static::getEventDispatcher()->dispatch($name, $event);
     }
 
     /**
@@ -47,7 +47,7 @@ trait EventsTrait
      *
      * @param EventDispatcherInterface|null $dispatcher
      */
-    public static function setEvents(EventDispatcherInterface $dispatcher = null)
+    public static function setEventDispatcher(EventDispatcherInterface $dispatcher = null)
     {
         self::$dispatchers[static::class] = $dispatcher;
     }
@@ -57,7 +57,7 @@ trait EventsTrait
      *
      * @return EventDispatcherInterface
      */
-    public static function events(): EventDispatcherInterface
+    public static function getEventDispatcher(): EventDispatcherInterface
     {
         if (isset(self::$dispatchers[static::class])) {
             return self::$dispatchers[static::class];

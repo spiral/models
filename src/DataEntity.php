@@ -1,22 +1,19 @@
 <?php
 /**
- * Spiral Framework.
+ * Spiral, Core Components
  *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
+ * @author Wolfy-J
  */
 
 namespace Spiral\Models;
 
 use Spiral\Models\Exceptions\EntityException;
-use Spiral\Models\Prototypes\AbstractEntity;
 
 /**
- * This is analog of DataEntity based on mutable arrays to define mutator and accessors.
- *
- * @see DataEntity
+ * DataEntity in spiral used to represent basic data set with filters and accessors. Most of spiral
+ * models (ORM and ODM, HttpFilters) will extend data entity.
  */
-class DynamicEntity extends AbstractEntity
+class DataEntity extends AbstractEntity
 {
     /**
      * Set of fields allowed to be filled using setFields() method.
@@ -25,7 +22,7 @@ class DynamicEntity extends AbstractEntity
      *
      * @var array
      */
-    protected $fillable = [];
+    const FILLABLE = [];
 
     /**
      * List of fields not allowed to be filled by setFields() method. Replace with and empty array
@@ -38,21 +35,21 @@ class DynamicEntity extends AbstractEntity
      *
      * @var array|string
      */
-    protected $secured = '*';
+    const SECURED = '*';
 
     /**
      * @see setField()
      *
      * @var array
      */
-    protected $setters = [];
+    const SETTERS = [];
 
     /**
      * @see getField()
      *
      * @var array
      */
-    protected $getters = [];
+    const GETTERS = [];
 
     /**
      * Accessor used to mock field data and filter every request thought itself.
@@ -62,7 +59,7 @@ class DynamicEntity extends AbstractEntity
      *
      * @var array
      */
-    protected $accessors = [];
+    const ACCESSORS = [];
 
     /**
      * Check if field can be set using setFields() method.
@@ -77,15 +74,15 @@ class DynamicEntity extends AbstractEntity
      */
     protected function isFillable(string $field): bool
     {
-        if (!empty($this->fillable)) {
-            return in_array($field, $this->fillable);
+        if (!empty(static::FILLABLE)) {
+            return in_array($field, static::FILLABLE);
         }
 
-        if ($this->secured === '*') {
+        if (static::SECURED === '*') {
             return false;
         }
 
-        return !in_array($field, $this->secured);
+        return !in_array($field, static::SECURED);
     }
 
     /**
@@ -100,12 +97,21 @@ class DynamicEntity extends AbstractEntity
      */
     protected function getMutator(string $field, string $mutator)
     {
-        //We do support 3 mutators: getter, setter and accessor, all of them can be
-        //referenced to valid field name by adding "s" at the end
-        $mutator = $mutator . 's';
+        $target = [];
+        switch ($mutator) {
+            case self::MUTATOR_ACCESSOR:
+                $target = static::ACCESSORS;
+                break;
+            case self::MUTATOR_GETTER:
+                $target = static::GETTERS;
+                break;
+            case self::MUTATOR_SETTER:
+                $target = static::SETTERS;
+                break;
+        }
 
-        if (isset($this->{$mutator}[$field])) {
-            return $this->{$mutator}[$field];
+        if (isset($target[$field])) {
+            return $target[$field];
         }
 
         return null;

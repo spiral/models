@@ -14,21 +14,15 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Raised while entity analysis to allow traits and other listeners apply changed to entity schema.
  */
-class DescribeEvent extends Event
+class ReflectionEvent extends Event
 {
-    /**
-     * @var ReflectionEntity
-     */
+    /** @var ReflectionEntity */
     private $reflection;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $property;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $value;
 
     /**
