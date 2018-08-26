@@ -24,6 +24,17 @@ class SchematicEntityTest extends TestCase
         $this->assertSame($data, $entity->getFields());
     }
 
+    public function testFillable2()
+    {
+        $schema = [SchematicEntity::SH_FILLABLE => '*'];
+
+        $data = ['a' => 1, 'b' => 2, 'c' => 3];
+
+        $entity = new SchematicEntity([], $schema);
+        $entity->setFields($data);
+        $this->assertSame($data, $entity->getFields());
+    }
+
     public function testSecured()
     {
         $schema = [SchematicEntity::SH_SECURED => '*'];
