@@ -5,7 +5,7 @@
  * @author    Wolfy-J
  */
 
-namespace Spiral\Tests\Models;
+namespace Spiral\Models\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\Traits\SolidableTrait;

@@ -8,8 +8,7 @@
 
 namespace Spiral\Models;
 
-use Spiral\Models\Events\DescribeEvent;
-use Spiral\Models\Prototypes\AbstractEntity;
+use Spiral\Models\Events\ReflectionEvent;
 use Spiral\Models\Reflections\ReflectionEntity;
 
 /**
@@ -38,7 +37,6 @@ class SchematicEntity extends AbstractEntity
     public function __construct(array $data, array $schema)
     {
         $this->schema = $schema;
-
         parent::__construct($data);
     }
 
@@ -47,7 +45,7 @@ class SchematicEntity extends AbstractEntity
      */
     protected function isFillable(string $field): bool
     {
-        if ($this->schema[self::SH_FILLABLE] === '*') {
+        if (!empty($this->schema[self::SH_FILLABLE]) && $this->schema[self::SH_FILLABLE] === '*') {
             return true;
         }
 
@@ -55,7 +53,7 @@ class SchematicEntity extends AbstractEntity
             return in_array($field, $this->schema[self::SH_FILLABLE]);
         }
 
-        if ($this->schema[self::SH_SECURED] === '*') {
+        if (!empty($this->schema[self::SH_SECURED]) && $this->schema[self::SH_SECURED] === '*') {
             return false;
         }
 
@@ -92,11 +90,11 @@ class SchematicEntity extends AbstractEntity
         /**
          * Clarifying property value using traits or other listeners.
          *
-         * @var DescribeEvent $event
+         * @var ReflectionEvent $event
          */
-        $event = static::events()->dispatch(
+        $event = static::getEventDispatcher()->dispatch(
             'describe',
-            new DescribeEvent($reflection, $property, $value)
+            new ReflectionEvent($reflection, $property, $value)
         );
 
         return $event->getValue();

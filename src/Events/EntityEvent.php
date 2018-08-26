@@ -16,9 +16,7 @@ use Symfony\Component\EventDispatcher\Event;
  */
 class EntityEvent extends Event
 {
-    /**
-     * @var null|EntityInterface
-     */
+    /** @var EntityInterface */
     private $entity = null;
 
     /**

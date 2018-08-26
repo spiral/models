@@ -23,7 +23,7 @@ interface AccessorInterface extends \JsonSerializable
      * methods. Attention, method declaration MUST contain internal validation and filters, MUST NOT
      * affect mocked data directly.
      *
-     * @see packValue
+     * @see serializeValue
      *
      * @param mixed $data
      *
@@ -38,5 +38,5 @@ interface AccessorInterface extends \JsonSerializable
      *
      * @throws AccessException
      */
-    public function packValue();
+    public function serializeValue();
 }

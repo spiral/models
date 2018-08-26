@@ -8,7 +8,7 @@
 
 namespace Spiral\Models\Reflections;
 
-use Spiral\Models\Prototypes\AbstractEntity;
+use Spiral\Models\AbstractEntity;
 use Spiral\Models\SchematicEntity;
 
 /**
@@ -32,17 +32,21 @@ class ReflectionEntity
     const BASE_CLASS = AbstractEntity::class;
 
     /**
+     * Accessors and filters.
+     */
+    private const MUTATOR_GETTER   = 'getter';
+    private const MUTATOR_SETTER   = 'setter';
+    private const MUTATOR_ACCESSOR = 'accessor';
+
+    /**
      * Properties cache.
      *
      * @invisible
-     *
      * @var array
      */
-    private $cache = [];
+    private $propertyCache = [];
 
-    /**
-     * @var \ReflectionClass
-     */
+    /** @var \ReflectionClass */
     private $reflection = null;
 
     /**
@@ -88,7 +92,7 @@ class ReflectionEntity
      */
     public function getSetters(): array
     {
-        return $this->getMutators()[AbstractEntity::MUTATOR_SETTER];
+        return $this->getMutators()[self::MUTATOR_SETTER];
     }
 
     /**
@@ -96,7 +100,7 @@ class ReflectionEntity
      */
     public function getGetters(): array
     {
-        return $this->getMutators()[AbstractEntity::MUTATOR_GETTER];
+        return $this->getMutators()[self::MUTATOR_GETTER];
     }
 
     /**
@@ -104,7 +108,7 @@ class ReflectionEntity
      */
     public function getAccessors(): array
     {
-        return $this->getMutators()[AbstractEntity::MUTATOR_ACCESSOR];
+        return $this->getMutators()[self::MUTATOR_ACCESSOR];
     }
 
     /**
@@ -145,21 +149,21 @@ class ReflectionEntity
     public function getMutators(): array
     {
         $mutators = [
-            AbstractEntity::MUTATOR_GETTER   => [],
-            AbstractEntity::MUTATOR_SETTER   => [],
-            AbstractEntity::MUTATOR_ACCESSOR => [],
+            self::MUTATOR_GETTER   => [],
+            self::MUTATOR_SETTER   => [],
+            self::MUTATOR_ACCESSOR => [],
         ];
 
         foreach ((array)$this->getProperty('getters', true) as $field => $filter) {
-            $mutators[AbstractEntity::MUTATOR_GETTER][$field] = $filter;
+            $mutators[self::MUTATOR_GETTER][$field] = $filter;
         }
 
         foreach ((array)$this->getProperty('setters', true) as $field => $filter) {
-            $mutators[AbstractEntity::MUTATOR_SETTER][$field] = $filter;
+            $mutators[self::MUTATOR_SETTER][$field] = $filter;
         }
 
         foreach ((array)$this->getProperty('accessors', true) as $field => $filter) {
-            $mutators[AbstractEntity::MUTATOR_ACCESSOR][$field] = $filter;
+            $mutators[self::MUTATOR_ACCESSOR][$field] = $filter;
         }
 
         return $mutators;
@@ -176,9 +180,9 @@ class ReflectionEntity
      */
     public function getProperty(string $property, bool $merge = false)
     {
-        if (isset($this->cache[$property])) {
+        if (isset($this->propertyCache[$property])) {
             //Property merging and trait events are pretty slow
-            return $this->cache[$property];
+            return $this->propertyCache[$property];
         }
 
         $properties = $this->reflection->getDefaultProperties();
@@ -209,7 +213,7 @@ class ReflectionEntity
         }
 
         //To let traits apply schema changes
-        return $this->cache[$property] = call_user_func(
+        return $this->propertyCache[$property] = call_user_func(
             [$this->getName(), 'describeProperty'], $this, $property, $value
         );
     }
@@ -259,6 +263,6 @@ class ReflectionEntity
      */
     public function __clone()
     {
-        $this->cache = [];
+        $this->propertyCache = [];
     }
 }

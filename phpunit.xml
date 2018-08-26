@@ -10,8 +10,7 @@
          processIsolation="false"
          stopOnFailure="false"
          stopOnError="false"
-         syntaxCheck="true"
-        >
+>
 
     <testsuites>
         <testsuite name="DataEntity models test">

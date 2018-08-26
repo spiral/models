@@ -6,10 +6,8 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Prototypes;
+namespace Spiral\Models;
 
-use Spiral\Models\AccessorInterface;
-use Spiral\Models\EntityInterface;
 use Spiral\Models\Exceptions\AccessExceptionInterface;
 use Spiral\Models\Exceptions\EntityException;
 use Spiral\Models\Traits\EventsTrait;
@@ -17,26 +15,18 @@ use Spiral\Models\Traits\EventsTrait;
 /**
  * AbstractEntity with ability to define field mutators and access
  */
-abstract class AbstractEntity extends MutableObject implements
+abstract class AbstractEntity extends Mutable implements
     EntityInterface,
-    \JsonSerializable,
-    \IteratorAggregate,
-    AccessorInterface
+    AccessorInterface,
+    \IteratorAggregate
 {
     use EventsTrait;
 
-    /**
-     * Field mutators.
-     *
-     * @private
-     */
-    const MUTATOR_GETTER   = 'getter';
-    const MUTATOR_SETTER   = 'setter';
-    const MUTATOR_ACCESSOR = 'accessor';
+    protected const MUTATOR_GETTER   = 'getter';
+    protected const MUTATOR_SETTER   = 'setter';
+    protected const MUTATOR_ACCESSOR = 'accessor';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $fields = [];
 
     /**
@@ -58,16 +48,6 @@ abstract class AbstractEntity extends MutableObject implements
     public function setValue($data)
     {
         return $this->setFields($data);
-    }
-
-    /**
-     * AccessorInterface dependency.
-     *
-     * {@inheritdoc}
-     */
-    public function packValue()
-    {
-        return $this->packFields();
     }
 
     /**
@@ -165,7 +145,7 @@ abstract class AbstractEntity extends MutableObject implements
                 try {
                     $this->setField($name, $value, true);
                 } catch (AccessExceptionInterface $e) {
-                    //We are supressing field setting exceptions
+                    //We are suppressing field setting exceptions
                 }
             }
         }
@@ -278,18 +258,18 @@ abstract class AbstractEntity extends MutableObject implements
     }
 
     /**
-     * Pack entity fields data into plain array.
+     * Pack entity fields into plain array.
      *
      * @return array
      *
      * @throws \Spiral\Models\Exceptions\AccessException
      */
-    public function packFields(): array
+    public function serializeValue(): array
     {
         $result = [];
         foreach ($this->fields as $field => $value) {
             if ($value instanceof AccessorInterface) {
-                $result[$field] = $value->packValue();
+                $result[$field] = $value->serializeValue();
             } else {
                 $result[$field] = $value;
             }
@@ -305,7 +285,7 @@ abstract class AbstractEntity extends MutableObject implements
      */
     public function toArray(): array
     {
-        return $this->packFields();
+        return $this->serializeValue();
     }
 
     /**
@@ -315,7 +295,7 @@ abstract class AbstractEntity extends MutableObject implements
      */
     public function jsonSerialize()
     {
-        return $this->packValue();
+        return $this->serializeValue();
     }
 
     /**

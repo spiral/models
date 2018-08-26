@@ -6,39 +6,42 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Tests\Models;
+namespace Spiral\Models\Tests;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
 use Spiral\Models\Events\EntityEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class EventsTest extends \PHPUnit_Framework_TestCase
+class EventsTest extends TestCase
 {
     public function testEventsDispatcher()
     {
-        $this->assertInstanceOf(EventDispatcherInterface::class, EventsTestEntity::events());
-        $this->assertInstanceOf(EventDispatcherInterface::class, DataEntity::events());
-        $this->assertNotSame(EventsTestEntity::events(), DataEntity::events());
+        $this->assertInstanceOf(EventDispatcherInterface::class,
+            EventsTestEntity::getEventDispatcher());
+        $this->assertInstanceOf(EventDispatcherInterface::class, DataEntity::getEventDispatcher());
+        $this->assertNotSame(EventsTestEntity::getEventDispatcher(),
+            DataEntity::getEventDispatcher());
 
         $class = new EventsTestEntity();
-        $this->assertSame(EventsTestEntity::events(), $class->events());
+        $this->assertSame(EventsTestEntity::getEventDispatcher(), $class->getEventDispatcher());
     }
 
     public function testSetEventsDispatcher()
     {
         $events = m::mock(EventDispatcherInterface::class);
-        EventsTestEntity::setEvents($events);
+        EventsTestEntity::setEventDispatcher($events);
 
-        $this->assertSame($events, EventsTestEntity::events());
+        $this->assertSame($events, EventsTestEntity::getEventDispatcher());
 
         $class = new EventsTestEntity();
-        $this->assertSame($events, $class->events());
+        $this->assertSame($events, $class->getEventDispatcher());
 
-        EventsTestEntity::setEvents(null);
+        EventsTestEntity::setEventDispatcher(null);
 
-        $this->assertInstanceOf(EventDispatcherInterface::class, $class->events());
-        $this->assertNotSame($events, $class->events());
+        $this->assertInstanceOf(EventDispatcherInterface::class, $class->getEventDispatcher());
+        $this->assertNotSame($events, $class->getEventDispatcher());
     }
 
     public function testFireEvent()
@@ -53,8 +56,6 @@ class EventsTestEntity extends DataEntity
 {
     public function doSomething()
     {
-        return $this->dispatch('test', new EntityEvent(
-            $this
-        ));
+        return $this->dispatch('test', new EntityEvent($this));
     }
 }

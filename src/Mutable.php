@@ -6,9 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Prototypes;
-
-use Spiral\Core\Component;
+namespace Spiral\Models;
 
 /**
  * Entity with ability to alter it's behaviour using set of statically assigned events.
@@ -19,7 +17,7 @@ use Spiral\Core\Component;
  * Simply define method with name: __init__... you can get access to self::events() inside it.
  * Traits can be used to define such methods.
  */
-abstract class MutableObject extends Component
+abstract class Mutable
 {
     /**
      * Every entity might have set of traits which can be initiated manually or at moment of

@@ -6,12 +6,12 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\tests\Cases\Models;
+namespace Spiral\Models\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
 
-//todo: improve test coverage
-class DataEntityTest extends \PHPUnit_Framework_TestCase
+class DataEntityTest extends TestCase
 {
     public function testSetter()
     {
@@ -35,7 +35,7 @@ class DataEntityTest extends \PHPUnit_Framework_TestCase
     public function testPackingSimple()
     {
         $entity = new DataEntity(['a' => 'b']);
-        $this->assertSame(['a' => 'b'], $entity->packFields());
+        $this->assertSame(['a' => 'b'], $entity->serializeValue());
     }
 
     public function testSerialize()
@@ -43,6 +43,6 @@ class DataEntityTest extends \PHPUnit_Framework_TestCase
         $data = ['a' => 123, 'b' => null, 'c' => 'test'];
 
         $entity = new DataEntity($data);
-        $this->assertEquals($data, $entity->packValue());
+        $this->assertEquals($data, $entity->serializeValue());
     }
 }
