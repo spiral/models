@@ -250,6 +250,7 @@ class ReflectionEntity
         return call_user_func_array([$this->reflection, $name], $arguments);
     }
 
+
     /**
      * Cloning and flushing cache.
      */

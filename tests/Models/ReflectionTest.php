@@ -90,6 +90,36 @@ class ReflectionTest extends TestCase
 
         ExtendedModel::setEventDispatcher(null);
     }
+
+    public function testGetSecured()
+    {
+        $schema = new ReflectionEntity(TestModel::class);
+        $this->assertSame('*', $schema->getSecured());
+    }
+
+    public function testGetReflectionValues()
+    {
+        $schema = new ReflectionEntity(ExtendedModel::class);
+
+        $this->assertSame([
+            'value' => 'intval',
+            'name'  => 'strtoupper'
+        ], $schema->getGetters());
+
+        $this->assertSame([
+            'value' => 'intval',
+            'name'  => 'strval'
+        ], $schema->getSetters());
+    }
+
+    public function testGetSchema()
+    {
+        $schema = new ReflectionEntity(SchemaModel::class);
+        $this->assertSame(['nice'], $schema->getSchema());
+
+        $schema = new ReflectionEntity(SchemaModelB::class);
+        $this->assertSame(['nice', 'nice2'], $schema->getSchema());
+    }
 }
 
 class TestModel extends SchematicEntity
@@ -116,4 +146,14 @@ class ExtendedModel extends TestModel
     {
 
     }
+}
+
+class SchemaModel extends TestModel
+{
+    const SCHEMA = ['nice'];
+}
+
+class SchemaModelB extends SchemaModel
+{
+    protected $schema = ['nice2'];
 }

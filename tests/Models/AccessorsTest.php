@@ -11,6 +11,7 @@ namespace Spiral\Models\Tests;
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\AccessorInterface;
 use Spiral\Models\DataEntity;
+use Spiral\Models\Reflections\ReflectionEntity;
 
 class AccessorsTest extends TestCase
 {
@@ -40,6 +41,14 @@ class AccessorsTest extends TestCase
         $this->assertEquals([
             'name' => new NameAccessor('mike')
         ], $e->getFields());
+    }
+
+    public function testReflection()
+    {
+        $s = new ReflectionEntity(AccessedEntity::class);
+        $this->assertSame([
+            'name' => NameAccessor::class
+        ], $s->getAccessors());
     }
 }
 
