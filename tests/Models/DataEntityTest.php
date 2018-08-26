@@ -197,6 +197,10 @@ class NullableEntity extends DataEntity
 
     protected function isNullable(string $field): bool
     {
+        if (parent::isNullable($field)) {
+            return true;
+        }
+
         return $field == 'id';
     }
 }
