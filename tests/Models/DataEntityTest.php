@@ -77,6 +77,9 @@ class DataEntityTest extends TestCase
 
         $this->assertSame('a', $key);
         $this->assertSame(90, $value);
+
+        $this->assertEquals(['a' => 90], $entity->toArray());
+        $this->assertEquals(['a' => 90], $entity->jsonSerialize());
     }
 }
 
