@@ -15,7 +15,7 @@ use Spiral\Models\Traits\EventsTrait;
 /**
  * AbstractEntity with ability to define field mutators and access
  */
-abstract class AbstractEntity extends Mutable implements
+abstract class AbstractEntity extends MutableObject implements
     EntityInterface,
     AccessorInterface,
     \IteratorAggregate

@@ -17,7 +17,7 @@ namespace Spiral\Models;
  * Simply define method with name: __init__... you can get access to self::events() inside it.
  * Traits can be used to define such methods.
  */
-abstract class Mutable
+abstract class MutableObject
 {
     /**
      * Every entity might have set of traits which can be initiated manually or at moment of
