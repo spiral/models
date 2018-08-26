@@ -43,6 +43,17 @@ class AccessorsTest extends TestCase
         ], $e->getFields());
     }
 
+    public function testGetAccessor()
+    {
+        $e = new AccessedEntity();
+        $this->assertSame('', (string)$e->name);
+        $this->assertInstanceOf(NameAccessor::class, $e->name);
+
+        $this->assertEquals([
+            'name' => new NameAccessor(null)
+        ], $e->getFields());
+    }
+
     public function testReflection()
     {
         $s = new ReflectionEntity(AccessedEntity::class);
