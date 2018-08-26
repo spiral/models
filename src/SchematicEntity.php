@@ -19,9 +19,9 @@ class SchematicEntity extends AbstractEntity
     /**
      * Schema constants. Starts with 2, but why not?
      */
-    const SH_SECURED  = 2;
-    const SH_FILLABLE = 3;
-    const SH_MUTATORS = 4;
+    public const SH_SECURED  = 2;
+    public const SH_FILLABLE = 3;
+    public const SH_MUTATORS = 4;
 
     /**
      * Behaviour schema.

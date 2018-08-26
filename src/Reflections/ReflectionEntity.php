@@ -29,7 +29,7 @@ class ReflectionEntity
     /**
      * Required to validly merge parent and children attributes.
      */
-    const BASE_CLASS = AbstractEntity::class;
+    protected const BASE_CLASS = AbstractEntity::class;
 
     /**
      * Accessors and filters.

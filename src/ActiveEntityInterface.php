@@ -14,9 +14,9 @@ use Spiral\Models\Exceptions\EntityExceptionInterface;
  */
 interface ActiveEntityInterface
 {
-    const CREATED   = 1;
-    const UPDATED   = 2;
-    const UNCHANGED = 3;
+    public const CREATED   = 1;
+    public const UPDATED   = 2;
+    public const UNCHANGED = 3;
 
     /**
      * Create entity or update entity state in database.
