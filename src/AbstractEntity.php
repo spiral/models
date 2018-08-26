@@ -41,16 +41,6 @@ abstract class AbstractEntity extends MutableObject implements
     }
 
     /**
-     * AccessorInterface dependency.
-     *
-     * {@inheritdoc}
-     */
-    public function setValue($data)
-    {
-        return $this->setFields($data);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function hasField(string $name): bool
@@ -258,18 +248,28 @@ abstract class AbstractEntity extends MutableObject implements
     }
 
     /**
+     * AccessorInterface dependency.
+     *
+     * {@inheritdoc}
+     */
+    public function setValue($data)
+    {
+        return $this->setFields($data);
+    }
+
+    /**
      * Pack entity fields into plain array.
      *
      * @return array
      *
      * @throws \Spiral\Models\Exceptions\AccessException
      */
-    public function serializeValue(): array
+    public function packValue(): array
     {
         $result = [];
         foreach ($this->fields as $field => $value) {
             if ($value instanceof AccessorInterface) {
-                $result[$field] = $value->serializeValue();
+                $result[$field] = $value->packValue();
             } else {
                 $result[$field] = $value;
             }
@@ -285,7 +285,7 @@ abstract class AbstractEntity extends MutableObject implements
      */
     public function toArray(): array
     {
-        return $this->serializeValue();
+        return $this->packValue();
     }
 
     /**
@@ -295,7 +295,7 @@ abstract class AbstractEntity extends MutableObject implements
      */
     public function jsonSerialize()
     {
-        return $this->serializeValue();
+        return $this->packValue();
     }
 
     /**

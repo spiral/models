@@ -35,7 +35,7 @@ class DataEntityTest extends TestCase
     public function testPackingSimple()
     {
         $entity = new DataEntity(['a' => 'b', 'c' => 10]);
-        $this->assertSame(['a' => 'b', 'c' => 10], $entity->serializeValue());
+        $this->assertSame(['a' => 'b', 'c' => 10], $entity->packValue());
     }
 
     public function testSerialize()
@@ -43,6 +43,40 @@ class DataEntityTest extends TestCase
         $data = ['a' => 123, 'b' => null, 'c' => 'test'];
 
         $entity = new DataEntity($data);
-        $this->assertEquals($data, $entity->serializeValue());
+        $this->assertEquals($data, $entity->packValue());
+    }
+
+    public function testSetValue()
+    {
+        $data = ['a' => 123, 'b' => null, 'c' => 'test'];
+
+        $entity = new PublicEntity($data);
+        $this->assertEquals($data, $entity->packValue());
+
+        $entity = new PublicEntity();
+        $entity->setValue(['a' => 123]);
+        $this->assertEquals(['a' => 123], $entity->packValue());
+
+        $this->assertSame(['a'], $entity->getKeys());
+        $this->assertTrue(isset($entity->a));
+
+        unset($entity->a);
+        $this->assertEquals([], $entity->packValue());
+
+        $entity['a'] = 90;
+        $this->assertEquals(['a' => 90], $entity->packValue());
+        $this->assertSame(90, $entity['a']);
+        unset($entity['a']);
+        $this->assertEquals([], $entity->packValue());
+    }
+}
+
+class PublicEntity extends DataEntity
+{
+    protected const FILLABLE = '*';
+
+    public function getKeys(): array
+    {
+        return parent::getKeys();
     }
 }

@@ -22,7 +22,7 @@ class DataEntity extends AbstractEntity
      *
      * @var array
      */
-    public const FILLABLE = [];
+    protected const FILLABLE = [];
 
     /**
      * List of fields not allowed to be filled by setFields() method. Replace with and empty array
@@ -35,21 +35,21 @@ class DataEntity extends AbstractEntity
      *
      * @var array|string
      */
-    public const SECURED = '*';
+    protected const SECURED = '*';
 
     /**
      * @see setField()
      *
      * @var array
      */
-    public const SETTERS = [];
+    protected const SETTERS = [];
 
     /**
      * @see getField()
      *
      * @var array
      */
-    public const GETTERS = [];
+    protected const GETTERS = [];
 
     /**
      * Accessor used to mock field data and filter every request thought itself.
@@ -59,7 +59,7 @@ class DataEntity extends AbstractEntity
      *
      * @var array
      */
-    public const ACCESSORS = [];
+    protected const ACCESSORS = [];
 
     /**
      * Check if field can be set using setFields() method.
@@ -74,6 +74,10 @@ class DataEntity extends AbstractEntity
      */
     protected function isFillable(string $field): bool
     {
+        if (static::FILLABLE == '*') {
+            return true;
+        }
+
         if (!empty(static::FILLABLE)) {
             return in_array($field, static::FILLABLE);
         }

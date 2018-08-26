@@ -91,10 +91,10 @@ class SchematicEntityTest extends TestCase
 
         $entity->setField('a', false);
         $this->assertInternalType('int', $entity->getField('a'));
-        $this->assertInternalType('bool', $entity->serializeValue()['a']);
+        $this->assertInternalType('bool', $entity->packValue()['a']);
 
         $entity->a = 8000.1;
         $this->assertInternalType('int', $entity->a);
-        $this->assertInternalType('float', $entity->serializeValue()['a']);
+        $this->assertInternalType('float', $entity->packValue()['a']);
     }
 }
