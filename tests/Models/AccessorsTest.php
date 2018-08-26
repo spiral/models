@@ -63,6 +63,15 @@ class AccessorsTest extends TestCase
             'name' => NameAccessor::class
         ], $s->getAccessors());
     }
+
+    /**
+     * @expectedException \Spiral\Models\Exceptions\EntityException
+     */
+    public function testException()
+    {
+        $e = new BadAccessedEntity();
+        $e->name = "xx";
+    }
 }
 
 class AccessedEntity extends DataEntity
@@ -73,6 +82,13 @@ class AccessedEntity extends DataEntity
     ];
 }
 
+class BadAccessedEntity extends DataEntity
+{
+    protected const FILLABLE  = '*';
+    protected const ACCESSORS = [
+        'name' => NameAccessorX::class
+    ];
+}
 
 class NameAccessor implements AccessorInterface
 {

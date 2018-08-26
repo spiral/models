@@ -366,7 +366,7 @@ abstract class AbstractEntity extends MutableObject implements
     ): AccessorInterface {
         if (!is_string($accessor) || !class_exists($accessor)) {
             throw new EntityException(
-                "Unable to create accessor for field {$name} in " . static::class
+                "Unable to create accessor for field `{$name}` in " . static::class
             );
         }
 
