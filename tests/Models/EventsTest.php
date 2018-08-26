@@ -50,6 +50,13 @@ class EventsTest extends TestCase
         $this->assertInstanceOf(EntityEvent::class, $class->doSomething());
         $this->assertSame($class, $class->doSomething()->getEntity());
     }
+
+    public function testFireEventNoDispatcher()
+    {
+        EventsTestEntity::setEventDispatcher(null);
+        $class = new EventsTestEntity();
+        $this->assertInstanceOf(EntityEvent::class, $class->doSomething());
+    }
 }
 
 class EventsTestEntity extends DataEntity
