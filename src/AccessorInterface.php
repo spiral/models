@@ -8,7 +8,7 @@
 
 namespace Spiral\Models;
 
-use Spiral\Models\Exceptions\AccessException;
+use Spiral\Models\Exception\AccessException;
 
 /**
  * Accessors used to mock access to model field, control value setting, serializing and etc.

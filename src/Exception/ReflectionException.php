@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Exceptions;
+namespace Spiral\Models\Exception;
 
 class ReflectionException extends \LogicException
 {

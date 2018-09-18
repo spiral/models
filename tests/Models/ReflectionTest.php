@@ -10,8 +10,8 @@ namespace Spiral\Models\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
-use Spiral\Models\Events\ReflectionEvent;
-use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\Models\Event\ReflectionEvent;
+use Spiral\Models\Reflection\ReflectionEntity;
 use Spiral\Models\SchematicEntity;
 
 class ReflectionTest extends TestCase

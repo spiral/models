@@ -5,7 +5,7 @@
  * @author Wolfy-J
  */
 
-namespace Spiral\Models\Exceptions;
+namespace Spiral\Models\Exception;
 
 /**
  * Property or method access exception.

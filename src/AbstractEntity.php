@@ -8,8 +8,8 @@
 
 namespace Spiral\Models;
 
-use Spiral\Models\Exceptions\AccessExceptionInterface;
-use Spiral\Models\Exceptions\EntityException;
+use Spiral\Models\Exception\AccessExceptionInterface;
+use Spiral\Models\Exception\EntityException;
 use Spiral\Models\Traits\EventsTrait;
 
 /**
@@ -53,7 +53,7 @@ abstract class AbstractEntity extends MutableObject implements
      *
      * @param bool $filter If false, associated field setter or accessor will be ignored.
      *
-     * @throws \Spiral\Models\Exceptions\AccessException
+     * @throws \Spiral\Models\Exception\AccessException
      */
     public function setField(string $name, $value, bool $filter = true)
     {
@@ -88,7 +88,7 @@ abstract class AbstractEntity extends MutableObject implements
      *
      * @param bool $filter If false, associated field getter will be ignored.
      *
-     * @throws \Spiral\Models\Exceptions\AccessException
+     * @throws \Spiral\Models\Exception\AccessException
      */
     public function getField(string $name, $default = null, bool $filter = true)
     {
@@ -122,7 +122,7 @@ abstract class AbstractEntity extends MutableObject implements
      *
      * @return $this
      *
-     * @throws \Spiral\Models\Exceptions\AccessException
+     * @throws \Spiral\Models\Exception\AccessException
      */
     public function setFields($fields = [], bool $all = false)
     {
@@ -158,7 +158,7 @@ abstract class AbstractEntity extends MutableObject implements
      *
      * @param bool $filter
      *
-     * @throws \Spiral\Models\Exceptions\AccessException
+     * @throws \Spiral\Models\Exception\AccessException
      */
     public function getFields(bool $filter = true): array
     {
@@ -262,7 +262,7 @@ abstract class AbstractEntity extends MutableObject implements
      *
      * @return array
      *
-     * @throws \Spiral\Models\Exceptions\AccessException
+     * @throws \Spiral\Models\Exception\AccessException
      */
     public function packValue(): array
     {
@@ -355,7 +355,7 @@ abstract class AbstractEntity extends MutableObject implements
      *
      * @return AccessorInterface|null
      *
-     * @throws \Spiral\Models\Exceptions\AccessException
+     * @throws \Spiral\Models\Exception\AccessException
      * @throws EntityException
      */
     protected function createAccessor(

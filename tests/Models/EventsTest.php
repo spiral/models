@@ -11,7 +11,7 @@ namespace Spiral\Models\Tests;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
-use Spiral\Models\Events\EntityEvent;
+use Spiral\Models\Event\EntityEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventsTest extends TestCase

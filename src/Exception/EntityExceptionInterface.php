@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Exceptions;
+namespace Spiral\Models\Exception;
 
 /**
  * Exception related to error while working with DataEntity .

@@ -6,9 +6,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Events;
+namespace Spiral\Models\Event;
 
-use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\Models\Reflection\ReflectionEntity;
 use Symfony\Component\EventDispatcher\Event;
 
 /**

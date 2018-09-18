@@ -8,7 +8,7 @@
 
 namespace Spiral\Models;
 
-use Spiral\Models\Exceptions\EntityExceptionInterface;
+use Spiral\Models\Exception\EntityExceptionInterface;
 
 /**
  * Generic data entity instance.

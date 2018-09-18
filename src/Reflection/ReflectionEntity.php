@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Reflections;
+namespace Spiral\Models\Reflection;
 
 use Spiral\Models\AbstractEntity;
 use Spiral\Models\SchematicEntity;

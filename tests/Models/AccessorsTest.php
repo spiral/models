@@ -11,7 +11,7 @@ namespace Spiral\Models\Tests;
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\AccessorInterface;
 use Spiral\Models\DataEntity;
-use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\Models\Reflection\ReflectionEntity;
 
 class AccessorsTest extends TestCase
 {
@@ -65,7 +65,7 @@ class AccessorsTest extends TestCase
     }
 
     /**
-     * @expectedException \Spiral\Models\Exceptions\EntityException
+     * @expectedException \Spiral\Models\Exception\EntityException
      */
     public function testException()
     {

@@ -7,7 +7,7 @@
 
 namespace Spiral\Models;
 
-use Spiral\Models\Exceptions\EntityExceptionInterface;
+use Spiral\Models\Exception\EntityExceptionInterface;
 
 /**
  * Common interface to indicate that entity implements ActiveRecord pattern.

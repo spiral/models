@@ -8,8 +8,8 @@
 
 namespace Spiral\Models;
 
-use Spiral\Models\Events\ReflectionEvent;
-use Spiral\Models\Reflections\ReflectionEntity;
+use Spiral\Models\Event\ReflectionEvent;
+use Spiral\Models\Reflection\ReflectionEntity;
 
 /**
  * Entity which code follows external behaviour schema.

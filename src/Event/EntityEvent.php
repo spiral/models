@@ -6,7 +6,7 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Events;
+namespace Spiral\Models\Event;
 
 use Spiral\Models\EntityInterface;
 use Symfony\Component\EventDispatcher\Event;
