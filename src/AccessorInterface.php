@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Spiral Framework.
  *
@@ -16,7 +17,7 @@ use Spiral\Models\Exception\AccessException;
  * Internal agreement declares accessor constructor as:
  * public function __construct($value, array $context = [])
  */
-interface AccessorInterface extends \JsonSerializable
+interface AccessorInterface
 {
     /**
      * Change value of accessor, no keyword "set" used to keep compatibility with model magic
