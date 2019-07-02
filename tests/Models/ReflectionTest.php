@@ -10,7 +10,6 @@ namespace Spiral\Models\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
-use Spiral\Models\Event\ReflectionEvent;
 use Spiral\Models\Reflection\ReflectionEntity;
 use Spiral\Models\SchematicEntity;
 
@@ -72,24 +71,6 @@ class ReflectionTest extends TestCase
             ],
             $schema->declaredMethods()
         );
-    }
-
-    public function testEvents()
-    {
-        ExtendedModel::getEventDispatcher()->addListener(
-            ReflectionEvent::EVENT,
-            function (ReflectionEvent $e) {
-                $this->assertSame('fillable', $e->getProperty());
-                $this->assertSame(['value', 'name'], $e->getValue());
-                $this->assertSame(ExtendedModel::class, $e->getReflection()->getName());
-                $e->setValue(['value', 'name', 'other']);
-            }
-        );
-
-        $schema = new ReflectionEntity(ExtendedModel::class);
-        $this->assertSame(['value', 'name', 'other'], $schema->getFillable());
-
-        ExtendedModel::setEventDispatcher(null);
     }
 
     public function testGetSecured()

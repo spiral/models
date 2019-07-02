@@ -11,18 +11,15 @@ namespace Spiral\Models;
 
 use Spiral\Models\Exception\AccessExceptionInterface;
 use Spiral\Models\Exception\EntityException;
-use Spiral\Models\Traits\EventsTrait;
 
 /**
  * AbstractEntity with ability to define field mutators and access
  */
-abstract class AbstractEntity extends MutableObject implements
+abstract class AbstractEntity implements
     EntityInterface,
     AccessorInterface,
     \IteratorAggregate
 {
-    use EventsTrait;
-
     protected const MUTATOR_GETTER   = 'getter';
     protected const MUTATOR_SETTER   = 'setter';
     protected const MUTATOR_ACCESSOR = 'accessor';
@@ -36,9 +33,6 @@ abstract class AbstractEntity extends MutableObject implements
     public function __construct(array $data = [])
     {
         $this->fields = $data;
-
-        //Initiating mutable object
-        static::initialize(false);
     }
 
     /**
@@ -114,16 +108,16 @@ abstract class AbstractEntity extends MutableObject implements
     /**
      * {@inheritdoc}
      *
-     * @see   $fillable
-     * @see   $secured
-     * @see   isFillable()
-     *
      * @param array|\Traversable $fields
      * @param bool               $all Fill all fields including non fillable.
      *
      * @return $this
      *
      * @throws \Spiral\Models\Exception\AccessException
+     * @see   $secured
+     * @see   isFillable()
+     *
+     * @see   $fillable
      */
     public function setFields($fields = [], bool $all = false)
     {

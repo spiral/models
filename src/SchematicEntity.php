@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Spiral\Models;
 
-use Spiral\Models\Event\ReflectionEvent;
-use Spiral\Models\Reflection\ReflectionEntity;
-
 /**
  * Entity which code follows external behaviour schema.
  */
@@ -71,32 +68,5 @@ class SchematicEntity extends AbstractEntity
         }
 
         return null;
-    }
-
-    /**
-     * Method used while entity static analysis to describe model related property using even
-     * dispatcher and associated model traits.
-     *
-     * @param ReflectionEntity $reflection
-     * @param string           $property
-     * @param mixed            $value
-     *
-     * @return mixed Returns filtered value.
-     * @event describe(DescribeEvent)
-     */
-    public static function describeProperty(ReflectionEntity $reflection, string $property, $value)
-    {
-        static::initialize(true);
-
-        /**
-         * Clarifying property value using traits or other listeners.
-         *
-         * @var ReflectionEvent $event
-         */
-        $event = static::getEventDispatcher()->dispatch(
-            new ReflectionEvent($reflection, $property, $value)
-        );
-
-        return $event->getValue();
     }
 }

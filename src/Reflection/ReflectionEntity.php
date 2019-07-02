@@ -214,9 +214,7 @@ class ReflectionEntity
         }
 
         //To let traits apply schema changes
-        return $this->propertyCache[$property] = call_user_func(
-            [$this->getName(), 'describeProperty'], $this, $property, $value
-        );
+        return $this->propertyCache[$property] = $value;
     }
 
     /**
