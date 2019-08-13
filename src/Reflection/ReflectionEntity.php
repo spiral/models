@@ -39,12 +39,7 @@ class ReflectionEntity
     private const MUTATOR_SETTER   = 'setter';
     private const MUTATOR_ACCESSOR = 'accessor';
 
-    /**
-     * Properties cache.
-     *
-     * @invisible
-     * @var array
-     */
+    /** @var array @internal */
     private $propertyCache = [];
 
     /** @var \ReflectionClass */
