@@ -38,7 +38,11 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      */
     public function hasField(string $name): bool
     {
-        return isset($this->fields[$name]);
+        if (!array_key_exists($name, $this->fields)) {
+            return false;
+        }
+
+        return $this->fields[$name] !== null || $this->isNullable($name);
     }
 
     /**
