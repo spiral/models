@@ -9,16 +9,14 @@ declare(strict_types=1);
 
 namespace Spiral\Models;
 
+use Spiral\Models\Exception\AccessException;
 use Spiral\Models\Exception\AccessExceptionInterface;
 use Spiral\Models\Exception\EntityException;
 
 /**
  * AbstractEntity with ability to define field mutators and access
  */
-abstract class AbstractEntity implements
-    EntityInterface,
-    AccessorInterface,
-    \IteratorAggregate
+abstract class AbstractEntity implements EntityInterface, AccessorInterface, \IteratorAggregate
 {
     protected const MUTATOR_GETTER   = 'getter';
     protected const MUTATOR_SETTER   = 'setter';
@@ -40,7 +38,7 @@ abstract class AbstractEntity implements
      */
     public function hasField(string $name): bool
     {
-        return array_key_exists($name, $this->fields);
+        return isset($this->fields[$name]);
     }
 
     /**
@@ -48,7 +46,7 @@ abstract class AbstractEntity implements
      *
      * @param bool $filter If false, associated field setter or accessor will be ignored.
      *
-     * @throws \Spiral\Models\Exception\AccessException
+     * @throws AccessException
      */
     public function setField(string $name, $value, bool $filter = true)
     {
@@ -83,7 +81,7 @@ abstract class AbstractEntity implements
      *
      * @param bool $filter If false, associated field getter will be ignored.
      *
-     * @throws \Spiral\Models\Exception\AccessException
+     * @throws AccessException
      */
     public function getField(string $name, $default = null, bool $filter = true)
     {
@@ -110,10 +108,9 @@ abstract class AbstractEntity implements
      *
      * @param array|\Traversable $fields
      * @param bool               $all Fill all fields including non fillable.
-     *
      * @return $this
      *
-     * @throws \Spiral\Models\Exception\AccessException
+     * @throws AccessException
      * @see   $secured
      * @see   isFillable()
      *
@@ -153,7 +150,7 @@ abstract class AbstractEntity implements
      *
      * @param bool $filter
      *
-     * @throws \Spiral\Models\Exception\AccessException
+     * @throws AccessException
      */
     public function getFields(bool $filter = true): array
     {
@@ -167,7 +164,6 @@ abstract class AbstractEntity implements
 
     /**
      * @param mixed $offset
-     *
      * @return bool
      */
     public function __isset($offset)
@@ -177,7 +173,6 @@ abstract class AbstractEntity implements
 
     /**
      * @param mixed $offset
-     *
      * @return mixed
      */
     public function __get($offset)
@@ -257,7 +252,7 @@ abstract class AbstractEntity implements
      *
      * @return array
      *
-     * @throws \Spiral\Models\Exception\AccessException
+     * @throws AccessException
      */
     public function packValue(): array
     {
@@ -347,10 +342,9 @@ abstract class AbstractEntity implements
      * @param string       $name
      * @param mixed        $value
      * @param array        $context  Custom accessor context.
-     *
      * @return AccessorInterface|null
      *
-     * @throws \Spiral\Models\Exception\AccessException
+     * @throws AccessException
      * @throws EntityException
      */
     protected function createAccessor(
@@ -375,7 +369,6 @@ abstract class AbstractEntity implements
      * @param string $name
      * @param bool   $filter
      * @param mixed  $value
-     *
      * @return mixed
      */
     private function getMutated(string $name, bool $filter, $value)
