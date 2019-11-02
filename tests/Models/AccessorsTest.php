@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,16 +7,16 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Tests;
+declare(strict_types=1);
+
+namespace Spiral\Tests\Models;
 
 use PHPUnit\Framework\TestCase;
-use Spiral\Models\AccessorInterface;
-use Spiral\Models\DataEntity;
 use Spiral\Models\Reflection\ReflectionEntity;
 
 class AccessorsTest extends TestCase
 {
-    public function testAccessed()
+    public function testAccessed(): void
     {
         $e = new AccessedEntity();
         $e->name = 'antony';
@@ -26,96 +27,50 @@ class AccessorsTest extends TestCase
 
         $this->assertSame([
             'name' => 'BOB'
-        ], $e->packValue());
+        ], $e->getValue());
 
         $this->assertSame([
             'name' => 'BOB'
         ], $e->jsonSerialize());
 
         $this->assertEquals([
-            'name' => new NameAccessor('bob')
+            'name' => new NameValue('bob')
         ], $e->getFields());
 
-        $e->name = new NameAccessor("mike");
+        $e->name = new NameValue('mike');
 
         $this->assertEquals([
-            'name' => new NameAccessor('mike')
+            'name' => new NameValue('mike')
         ], $e->getFields());
     }
 
-    public function testGetAccessor()
+    public function testGetAccessor(): void
     {
         $e = new AccessedEntity();
         $this->assertSame('', (string)$e->name);
-        $this->assertInstanceOf(NameAccessor::class, $e->name);
+        $this->assertInstanceOf(NameValue::class, $e->name);
 
         $this->assertEquals([
-            'name' => new NameAccessor(null)
+            'name' => new NameValue(null)
         ], $e->getFields());
 
         $e->setFields(null);
     }
 
-    public function testReflection()
+    public function testReflection(): void
     {
         $s = new ReflectionEntity(AccessedEntity::class);
         $this->assertSame([
-            'name' => NameAccessor::class
+            'name' => NameValue::class
         ], $s->getAccessors());
     }
 
     /**
      * @expectedException \Spiral\Models\Exception\EntityException
      */
-    public function testException()
+    public function testException(): void
     {
         $e = new BadAccessedEntity();
-        $e->name = "xx";
-    }
-}
-
-class AccessedEntity extends DataEntity
-{
-    protected const FILLABLE  = '*';
-    protected const ACCESSORS = [
-        'name' => NameAccessor::class
-    ];
-}
-
-class BadAccessedEntity extends DataEntity
-{
-    protected const FILLABLE  = '*';
-    protected const ACCESSORS = [
-        'name' => NameAccessorX::class
-    ];
-}
-
-class NameAccessor implements AccessorInterface
-{
-    private $value;
-
-    public function __construct($value)
-    {
-        $this->setValue($value);
-    }
-
-    public function setValue($data)
-    {
-        $this->value = strtoupper($data);
-    }
-
-    public function packValue()
-    {
-        return $this->value;
-    }
-
-    public function jsonSerialize()
-    {
-        return $this->value;
-    }
-
-    public function __toString(): string
-    {
-        return $this->value;
+        $e->name = 'xx';
     }
 }

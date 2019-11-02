@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -16,7 +18,7 @@ use Spiral\Models\Exception\EntityException;
 /**
  * AbstractEntity with ability to define field mutators and access
  */
-abstract class AbstractEntity implements EntityInterface, AccessorInterface, \IteratorAggregate
+abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
 {
     protected const MUTATOR_GETTER   = 'getter';
     protected const MUTATOR_SETTER   = 'setter';
@@ -34,136 +36,11 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
     }
 
     /**
-     * {@inheritdoc}
+     * Destruct data entity.
      */
-    public function hasField(string $name): bool
+    public function __destruct()
     {
-        if (!array_key_exists($name, $this->fields)) {
-            return false;
-        }
-
-        return $this->fields[$name] !== null || $this->isNullable($name);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param bool $filter If false, associated field setter or accessor will be ignored.
-     *
-     * @throws AccessException
-     */
-    public function setField(string $name, $value, bool $filter = true)
-    {
-        if ($value instanceof AccessorInterface) {
-            //In case of non scalar values filters must be bypassed (check accessor compatibility?)
-            $this->fields[$name] = clone $value;
-
-            return;
-        }
-
-        if (!$filter || (is_null($value) && $this->isNullable($name))) {
-            //Bypassing all filters
-            $this->fields[$name] = $value;
-
-            return;
-        }
-
-        //Checking if field have accessor
-        $accessor = $this->getMutator($name, self::MUTATOR_ACCESSOR);
-
-        if (!empty($accessor)) {
-            //Setting value thought associated accessor
-            $this->setAccessed($accessor, $name, $value);
-        } else {
-            //Setting value thought setter filter (if any)
-            $this->setMutated($name, $value);
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param bool $filter If false, associated field getter will be ignored.
-     *
-     * @throws AccessException
-     */
-    public function getField(string $name, $default = null, bool $filter = true)
-    {
-        $value = $this->hasField($name) ? $this->fields[$name] : $default;
-
-        if ($value instanceof AccessorInterface || (is_null($value) && $this->isNullable($name))) {
-            //Direct access to value when value is accessor or null and declared as nullable
-            return $value;
-        }
-
-        //Checking if field have accessor (decorator)
-        $accessor = $this->getMutator($name, self::MUTATOR_ACCESSOR);
-
-        if (!empty($accessor)) {
-            return $this->fields[$name] = $this->createAccessor($accessor, $name, $value);
-        }
-
-        //Getting value though getter
-        return $this->getMutated($name, $filter, $value);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param array|\Traversable $fields
-     * @param bool               $all Fill all fields including non fillable.
-     * @return $this
-     *
-     * @throws AccessException
-     * @see   $secured
-     * @see   isFillable()
-     *
-     * @see   $fillable
-     */
-    public function setFields($fields = [], bool $all = false)
-    {
-        if (!is_array($fields) && !$fields instanceof \Traversable) {
-            return $this;
-        }
-
-        foreach ($fields as $name => $value) {
-            if ($all || $this->isFillable($name)) {
-                try {
-                    $this->setField($name, $value, true);
-                } catch (AccessExceptionInterface $e) {
-                    //We are suppressing field setting exceptions
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getKeys(): array
-    {
-        return array_keys($this->fields);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * Every getter and accessor will be applied/constructed if filter argument set to true.
-     *
-     * @param bool $filter
-     *
-     * @throws AccessException
-     */
-    public function getFields(bool $filter = true): array
-    {
-        $result = [];
-        foreach ($this->fields as $name => $field) {
-            $result[$name] = $this->getField($name, null, $filter);
-        }
-
-        return $result;
+        $this->flushFields();
     }
 
     /**
@@ -188,7 +65,7 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      * @param mixed $offset
      * @param mixed $value
      */
-    public function __set($offset, $value)
+    public function __set($offset, $value): void
     {
         $this->setField($offset, $value);
     }
@@ -196,9 +73,134 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
     /**
      * @param mixed $offset
      */
-    public function __unset($offset)
+    public function __unset($offset): void
     {
         unset($this->fields[$offset]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasField(string $name): bool
+    {
+        if (!array_key_exists($name, $this->fields)) {
+            return false;
+        }
+
+        return $this->fields[$name] !== null || $this->isNullable($name);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param bool $filter If false, associated field setter or accessor will be ignored.
+     *
+     * @throws AccessException
+     */
+    public function setField(string $name, $value, bool $filter = true): void
+    {
+        if ($value instanceof ValueInterface) {
+            //In case of non scalar values filters must be bypassed (check accessor compatibility?)
+            $this->fields[$name] = clone $value;
+
+            return;
+        }
+
+        if (!$filter || (is_null($value) && $this->isNullable($name))) {
+            //Bypassing all filters
+            $this->fields[$name] = $value;
+
+            return;
+        }
+
+        //Checking if field have accessor
+        $accessor = $this->getMutator($name, self::MUTATOR_ACCESSOR);
+
+        if ($accessor !== null) {
+            //Setting value thought associated accessor
+            $this->thoughValue($accessor, $name, $value);
+        } else {
+            //Setting value thought setter filter (if any)
+            $this->setMutated($name, $value);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param bool $filter If false, associated field getter will be ignored.
+     *
+     * @throws AccessException
+     */
+    public function getField(string $name, $default = null, bool $filter = true)
+    {
+        $value = $this->hasField($name) ? $this->fields[$name] : $default;
+
+        if ($value instanceof ValueInterface || (is_null($value) && $this->isNullable($name))) {
+            //Direct access to value when value is accessor or null and declared as nullable
+            return $value;
+        }
+
+        //Checking if field have accessor (decorator)
+        $accessor = $this->getMutator($name, self::MUTATOR_ACCESSOR);
+
+        if (!empty($accessor)) {
+            return $this->fields[$name] = $this->createValue($accessor, $name, $value);
+        }
+
+        //Getting value though getter
+        return $this->getMutated($name, $filter, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param array|\Traversable $fields
+     * @param bool               $all Fill all fields including non fillable.
+     * @return $this
+     *
+     * @throws AccessException
+     *
+     * @see   $secured
+     * @see   isFillable()
+     * @see   $fillable
+     */
+    public function setFields($fields = [], bool $all = false)
+    {
+        if (!is_array($fields) && !$fields instanceof \Traversable) {
+            return $this;
+        }
+
+        foreach ($fields as $name => $value) {
+            if ($all || $this->isFillable($name)) {
+                try {
+                    $this->setField($name, $value, true);
+                } catch (AccessExceptionInterface $e) {
+                    //We are suppressing field setting exceptions
+                }
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * Every getter and accessor will be applied/constructed if filter argument set to true.
+     *
+     * @param bool $filter
+     *
+     * @throws AccessException
+     */
+    public function getFields(bool $filter = true): array
+    {
+        $result = [];
+        foreach ($this->fields as $name => $field) {
+            $result[$name] = $this->getField($name, null, $filter);
+        }
+
+        return $result;
     }
 
     /**
@@ -220,7 +222,7 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->setField($offset, $value);
     }
@@ -228,7 +230,7 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->__unset($offset);
     }
@@ -258,12 +260,12 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      *
      * @throws AccessException
      */
-    public function packValue(): array
+    public function getValue(): array
     {
         $result = [];
         foreach ($this->fields as $field => $value) {
-            if ($value instanceof AccessorInterface) {
-                $result[$field] = $value->packValue();
+            if ($value instanceof ValueInterface) {
+                $result[$field] = $value->getValue();
             } else {
                 $result[$field] = $value;
             }
@@ -279,7 +281,7 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      */
     public function toArray(): array
     {
-        return $this->packValue();
+        return $this->getValue();
     }
 
     /**
@@ -289,21 +291,21 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      */
     public function jsonSerialize()
     {
-        return $this->packValue();
+        return $this->getValue();
     }
 
     /**
-     * Destruct data entity.
+     * @return array
      */
-    public function __destruct()
+    protected function getKeys(): array
     {
-        $this->flushFields();
+        return array_keys($this->fields);
     }
 
     /**
      * Reset every field value.
      */
-    protected function flushFields()
+    protected function flushFields(): void
     {
         $this->fields = [];
     }
@@ -342,29 +344,29 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
     /**
      * Create instance of field accessor.
      *
-     * @param mixed|string $accessor Might be entity implementation specific.
+     * @param mixed|string $type Might be entity implementation specific.
      * @param string       $name
      * @param mixed        $value
-     * @param array        $context  Custom accessor context.
-     * @return AccessorInterface|null
+     * @param array        $context Custom accessor context.
+     * @return ValueInterface|null
      *
      * @throws AccessException
      * @throws EntityException
      */
-    protected function createAccessor(
-        $accessor,
+    protected function createValue(
+        $type,
         string $name,
         $value,
         array $context = []
-    ): AccessorInterface {
-        if (!is_string($accessor) || !class_exists($accessor)) {
+    ): ValueInterface {
+        if (!is_string($type) || !class_exists($type)) {
             throw new EntityException(
                 "Unable to create accessor for field `{$name}` in " . static::class
             );
         }
 
-        //Field as a context
-        return new $accessor($value, $context + ['field' => $name, 'entity' => $this]);
+        // field as a context, this is the default convention
+        return new $type($value, $context + ['field' => $name, 'entity' => $this]);
     }
 
     /**
@@ -397,7 +399,7 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      * @param string $name
      * @param mixed  $value
      */
-    private function setMutated(string $name, $value)
+    private function setMutated(string $name, $value): void
     {
         $setter = $this->getMutator($name, self::MUTATOR_SETTER);
 
@@ -416,10 +418,10 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
      * Set value in/thought associated accessor.
      *
      * @param string       $name
-     * @param string|array $accessor Accessor definition (implementation specific).
+     * @param string|array $type Accessor definition (implementation specific).
      * @param mixed        $value
      */
-    private function setAccessed($accessor, string $name, $value)
+    private function thoughValue($type, string $name, $value): void
     {
         if (array_key_exists($name, $this->fields)) {
             $field = $this->fields[$name];
@@ -427,9 +429,9 @@ abstract class AbstractEntity implements EntityInterface, AccessorInterface, \It
             $field = null;
         }
 
-        if (empty($field) || !($field instanceof AccessorInterface)) {
+        if (empty($field) || !($field instanceof ValueInterface)) {
             //New field representation
-            $field = $this->createAccessor($accessor, $name, $value);
+            $field = $this->createValue($type, $name, $value);
 
             //Save accessor with other fields
             $this->fields[$name] = $field;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,7 +7,9 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Tests;
+declare(strict_types=1);
+
+namespace Spiral\Tests\Models;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
@@ -15,25 +18,25 @@ use Spiral\Models\SchematicEntity;
 
 class ReflectionTest extends TestCase
 {
-    public function testReflection()
+    public function testReflection(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
         $this->assertEquals(new \ReflectionClass(TestModel::class), $schema->getReflection());
     }
 
-    public function testFillable()
+    public function testFillable(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
         $this->assertSame(['value'], $schema->getFillable());
     }
 
-    public function testFillableExtended()
+    public function testFillableExtended(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
         $this->assertSame(['value', 'name'], $schema->getFillable());
     }
 
-    public function testSetters()
+    public function testSetters(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
         $this->assertSame(
@@ -44,7 +47,7 @@ class ReflectionTest extends TestCase
         );
     }
 
-    public function testSettersExtended()
+    public function testSettersExtended(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
         $this->assertSame(
@@ -56,13 +59,13 @@ class ReflectionTest extends TestCase
         );
     }
 
-    public function testSecured()
+    public function testSecured(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
         $this->assertSame(['name'], $schema->getSecured());
     }
 
-    public function testDeclaredMethods()
+    public function testDeclaredMethods(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
         $this->assertEquals(
@@ -73,13 +76,13 @@ class ReflectionTest extends TestCase
         );
     }
 
-    public function testGetSecured()
+    public function testGetSecured(): void
     {
         $schema = new ReflectionEntity(TestModel::class);
         $this->assertSame('*', $schema->getSecured());
     }
 
-    public function testGetReflectionValues()
+    public function testGetReflectionValues(): void
     {
         $schema = new ReflectionEntity(ExtendedModel::class);
 
@@ -94,7 +97,7 @@ class ReflectionTest extends TestCase
         ], $schema->getSetters());
     }
 
-    public function testGetSchema()
+    public function testGetSchema(): void
     {
         $schema = new ReflectionEntity(SchemaModel::class);
         $this->assertSame(['nice'], $schema->getSchema());
@@ -103,51 +106,9 @@ class ReflectionTest extends TestCase
         $this->assertSame(['nice', 'nice2'], $schema->getSchema());
     }
 
-    public function testGetSchemaNotSchematic()
+    public function testGetSchemaNotSchematic(): void
     {
         $schema = new ReflectionEntity(SchemaModelC::class);
         $this->assertSame(['nice2'], $schema->getSchema());
     }
-}
-
-class TestModel extends SchematicEntity
-{
-    protected $fillable = ['value'];
-    protected $setters = ['value' => 'intval'];
-    protected $getters = ['value' => 'intval'];
-    protected $secured = '*';
-
-    protected function methodA()
-    {
-
-    }
-}
-
-class ExtendedModel extends TestModel
-{
-    protected $fillable = ['name'];
-    protected $setters = ['name' => 'strval'];
-    protected $getters = ['name' => 'strtoupper'];
-    protected $secured = ['name'];
-
-    protected function methodB()
-    {
-
-    }
-}
-
-class SchemaModel extends TestModel
-{
-    const SCHEMA = ['nice'];
-}
-
-class SchemaModelB extends SchemaModel
-{
-    protected $schema = ['nice2'];
-}
-
-
-class SchemaModelC extends DataEntity
-{
-    protected $schema = ['nice2'];
 }

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -17,14 +19,12 @@ use Spiral\Models\Exception\AccessException;
  * Internal agreement declares accessor constructor as:
  * public function __construct($value, array $context = [])
  */
-interface AccessorInterface
+interface ValueInterface
 {
     /**
      * Change value of accessor, no keyword "set" used to keep compatibility with model magic
      * methods. Attention, method declaration MUST contain internal validation and filters, MUST NOT
      * affect mocked data directly.
-     *
-     * @see packValue
      *
      * @param mixed $data
      *
@@ -39,5 +39,5 @@ interface AccessorInterface
      *
      * @throws AccessException
      */
-    public function packValue();
+    public function getValue();
 }

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Models\Reflection;
@@ -53,6 +55,28 @@ class ReflectionEntity
     public function __construct(string $class)
     {
         $this->reflection = new \ReflectionClass($class);
+    }
+
+    /**
+     * Bypassing call to reflection.
+     *
+     * @param string $name
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call(string $name, array $arguments)
+    {
+        return call_user_func_array([$this->reflection, $name], $arguments);
+    }
+
+
+    /**
+     * Cloning and flushing cache.
+     */
+    public function __clone()
+    {
+        $this->propertyCache = [];
     }
 
     /**
@@ -229,27 +253,5 @@ class ReflectionEntity
         }
 
         return null;
-    }
-
-    /**
-     * Bypassing call to reflection.
-     *
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return mixed
-     */
-    public function __call(string $name, array $arguments)
-    {
-        return call_user_func_array([$this->reflection, $name], $arguments);
-    }
-
-
-    /**
-     * Cloning and flushing cache.
-     */
-    public function __clone()
-    {
-        $this->propertyCache = [];
     }
 }

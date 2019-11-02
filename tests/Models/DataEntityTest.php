@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,15 +7,16 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Tests;
+declare(strict_types=1);
 
-use Mockery\Exception\RuntimeException;
+namespace Spiral\Tests\Models;
+
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\DataEntity;
 
 class DataEntityTest extends TestCase
 {
-    public function testSetter()
+    public function testSetter(): void
     {
         $entity = new DataEntity();
         $entity->setField('abc', 123);
@@ -24,7 +26,7 @@ class DataEntityTest extends TestCase
         $this->assertFalse($entity->hasField('bce'));
     }
 
-    public function testMagicProperties()
+    public function testMagicProperties(): void
     {
         $entity = new DataEntity();
         $entity->abc = 123;
@@ -33,44 +35,44 @@ class DataEntityTest extends TestCase
         $this->assertTrue(isset($entity->abc));
     }
 
-    public function testPackingSimple()
+    public function testPackingSimple(): void
     {
         $entity = new DataEntity(['a' => 'b', 'c' => 10]);
-        $this->assertSame(['a' => 'b', 'c' => 10], $entity->packValue());
+        $this->assertSame(['a' => 'b', 'c' => 10], $entity->getValue());
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $data = ['a' => 123, 'b' => null, 'c' => 'test'];
 
         $entity = new DataEntity($data);
-        $this->assertEquals($data, $entity->packValue());
+        $this->assertEquals($data, $entity->getValue());
     }
 
-    public function testSetValue()
+    public function testSetValue(): void
     {
         $data = ['a' => 123, 'b' => null, 'c' => 'test'];
 
         $entity = new PublicEntity($data);
-        $this->assertEquals($data, $entity->packValue());
+        $this->assertEquals($data, $entity->getValue());
 
         $entity = new PublicEntity();
         $entity->setValue(['a' => 123]);
-        $this->assertEquals(['a' => 123], $entity->packValue());
+        $this->assertEquals(['a' => 123], $entity->getValue());
 
         $this->assertSame(['a'], $entity->getKeys());
         $this->assertTrue(isset($entity->a));
 
         unset($entity->a);
-        $this->assertEquals([], $entity->packValue());
+        $this->assertEquals([], $entity->getValue());
 
         $entity['a'] = 90;
-        $this->assertEquals(['a' => 90], $entity->packValue());
+        $this->assertEquals(['a' => 90], $entity->getValue());
         $this->assertSame(90, $entity['a']);
         $this->assertTrue(isset($entity['a']));
 
         unset($entity['a']);
-        $this->assertEquals([], $entity->packValue());
+        $this->assertEquals([], $entity->getValue());
 
         $entity['a'] = 90;
         foreach ($entity as $key => $value) {
@@ -85,7 +87,7 @@ class DataEntityTest extends TestCase
         $this->assertEquals(['a' => 90], $entity->jsonSerialize());
     }
 
-    public function testSecured()
+    public function testSecured(): void
     {
         $entity = new SecuredEntity();
         $entity->setValue([
@@ -93,7 +95,7 @@ class DataEntityTest extends TestCase
             'id'   => '900'
         ]);
 
-        $this->assertEquals([], $entity->packValue());
+        $this->assertEquals([], $entity->getValue());
 
         $entity = new PartiallySecuredEntity();
         $entity->setValue([
@@ -103,10 +105,10 @@ class DataEntityTest extends TestCase
 
         $this->assertEquals([
             'id' => 900
-        ], $entity->packValue());
+        ], $entity->getValue());
     }
 
-    public function testSetters()
+    public function testSetters(): void
     {
         $entity = new FilteredEntity();
         $entity->setValue([
@@ -116,16 +118,16 @@ class DataEntityTest extends TestCase
 
         $this->assertEquals([
             'id' => 900
-        ], $entity->packValue());
+        ], $entity->getValue());
 
         $entity->id = [];
 
         $this->assertEquals([
             'id' => 0
-        ], $entity->packValue());
+        ], $entity->getValue());
     }
 
-    public function testNullable()
+    public function testNullable(): void
     {
         $entity = new NullableEntity();
         $entity->setValue([
@@ -136,20 +138,20 @@ class DataEntityTest extends TestCase
         $this->assertEquals([
             'name' => 'Antony',
             'id'   => 900
-        ], $entity->packValue());
+        ], $entity->getValue());
 
         // no filter
         $entity->name = null;
         $this->assertEquals([
             'name' => null,
             'id'   => 900
-        ], $entity->packValue());
+        ], $entity->getValue());
 
         $entity->id = null;
         $this->assertEquals([
             'name' => null,
             'id'   => null
-        ], $entity->packValue());
+        ], $entity->getValue());
 
 
         $entity = new FilteredEntity();
@@ -160,10 +162,10 @@ class DataEntityTest extends TestCase
 
         $this->assertEquals([
             'id' => 0
-        ], $entity->packValue());
+        ], $entity->getValue());
     }
 
-    public function testGetters()
+    public function testGetters(): void
     {
         $entity = new GetEntity(['id' => []]);
         $this->assertSame(0, $entity->id);
@@ -171,61 +173,5 @@ class DataEntityTest extends TestCase
         $this->assertEquals([
             'id' => 0
         ], $entity->getFields());
-    }
-}
-
-class GetEntity extends DataEntity
-{
-    protected const GETTERS = ['id' => [self::class, 'filter']];
-
-    protected static function filter($v)
-    {
-        if (is_array($v)) {
-            throw new RuntimeException("can't be array");
-        }
-
-        return (int)$v;
-    }
-}
-
-class PublicEntity extends DataEntity
-{
-    protected const FILLABLE = '*';
-
-    public function getKeys(): array
-    {
-        return parent::getKeys();
-    }
-}
-
-class SecuredEntity extends DataEntity
-{
-    protected const SECURED = '*';
-}
-
-class PartiallySecuredEntity extends DataEntity
-{
-    protected const SECURED = ['name'];
-}
-
-
-class FilteredEntity extends DataEntity
-{
-    protected const FILLABLE = ['id'];
-    protected const SETTERS  = ['id' => 'intval'];
-}
-
-class NullableEntity extends DataEntity
-{
-    protected const FILLABLE = '*';
-    protected const SETTERS  = ['id' => 'intval'];
-
-    protected function isNullable(string $field): bool
-    {
-        if (parent::isNullable($field)) {
-            return true;
-        }
-
-        return $field == 'id';
     }
 }

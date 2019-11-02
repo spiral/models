@@ -9,8 +9,9 @@
 
 declare(strict_types=1);
 
-namespace Spiral\Models\Exception;
+namespace Spiral\Tests\Models;
 
-class ReflectionException extends \LogicException
+class SchemaModelB extends SchemaModel
 {
+    protected $schema = ['nice2'];
 }

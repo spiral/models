@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spiral Framework.
  *
@@ -6,14 +7,16 @@
  * @author    Anton Titov (Wolfy-J)
  */
 
-namespace Spiral\Models\Tests;
+declare(strict_types=1);
+
+namespace Spiral\Tests\Models;
 
 use PHPUnit\Framework\TestCase;
 use Spiral\Models\SchematicEntity;
 
 class SchematicEntityTest extends TestCase
 {
-    public function testFillable()
+    public function testFillable(): void
     {
         $schema = [SchematicEntity::SH_SECURED => []];
 
@@ -24,7 +27,7 @@ class SchematicEntityTest extends TestCase
         $this->assertSame($data, $entity->getFields());
     }
 
-    public function testFillable2()
+    public function testFillable2(): void
     {
         $schema = [SchematicEntity::SH_FILLABLE => '*'];
 
@@ -35,7 +38,7 @@ class SchematicEntityTest extends TestCase
         $this->assertSame($data, $entity->getFields());
     }
 
-    public function testSecured()
+    public function testSecured(): void
     {
         $schema = [SchematicEntity::SH_SECURED => '*'];
 
@@ -46,7 +49,7 @@ class SchematicEntityTest extends TestCase
         $this->assertSame([], $entity->getFields());
     }
 
-    public function testPartiallySecured()
+    public function testPartiallySecured(): void
     {
         $schema = [
             SchematicEntity::SH_SECURED  => '*',
@@ -60,7 +63,7 @@ class SchematicEntityTest extends TestCase
         $this->assertSame(['a' => 1, 'b' => 2], $entity->getFields());
     }
 
-    public function getSetters()
+    public function getSetters(): void
     {
         $schema = [
             SchematicEntity::SH_MUTATORS => [
@@ -79,7 +82,7 @@ class SchematicEntityTest extends TestCase
         $this->assertSame(800, $entity->a);
     }
 
-    public function testGetters()
+    public function testGetters(): void
     {
         $schema = [
             SchematicEntity::SH_MUTATORS => [
@@ -91,10 +94,10 @@ class SchematicEntityTest extends TestCase
 
         $entity->setField('a', false);
         $this->assertInternalType('int', $entity->getField('a'));
-        $this->assertInternalType('bool', $entity->packValue()['a']);
+        $this->assertInternalType('bool', $entity->getValue()['a']);
 
         $entity->a = 8000.1;
         $this->assertInternalType('int', $entity->a);
-        $this->assertInternalType('float', $entity->packValue()['a']);
+        $this->assertInternalType('float', $entity->getValue()['a']);
     }
 }

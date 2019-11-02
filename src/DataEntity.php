@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Spiral Framework.
  *
  * @license   MIT
  * @author    Anton Titov (Wolfy-J)
  */
+
 declare(strict_types=1);
 
 namespace Spiral\Models;
@@ -21,7 +23,6 @@ class DataEntity extends AbstractEntity
      * Set of fields allowed to be filled using setFields() method.
      *
      * @see setFields()
-     *
      * @var array
      */
     protected const FILLABLE = [];
@@ -34,21 +35,18 @@ class DataEntity extends AbstractEntity
      * child implementations.
      *
      * @see setFields()
-     *
      * @var array|string
      */
     protected const SECURED = '*';
 
     /**
      * @see setField()
-     *
      * @var array
      */
     protected const SETTERS = [];
 
     /**
      * @see getField()
-     *
      * @var array
      */
     protected const GETTERS = [];
@@ -58,7 +56,6 @@ class DataEntity extends AbstractEntity
      *
      * @see getField()
      * @see setField()
-     *
      * @var array
      */
     protected const ACCESSORS = [];
@@ -66,13 +63,12 @@ class DataEntity extends AbstractEntity
     /**
      * Check if field can be set using setFields() method.
      *
-     * @see   setField()
-     * @see   $fillable
-     * @see   $secured
-     *
      * @param string $field
-     *
      * @return bool
+     *
+     * @see  $secured
+     * @see  setField()
+     * @see  $fillable
      */
     protected function isFillable(string $field): bool
     {
@@ -96,7 +92,6 @@ class DataEntity extends AbstractEntity
      *
      * @param string $field
      * @param string $mutator Mutator type (setter, getter, accessor).
-     *
      * @return mixed|null
      *
      * @throws EntityException
