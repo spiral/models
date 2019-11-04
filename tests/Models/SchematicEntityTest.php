@@ -12,13 +12,14 @@ declare(strict_types=1);
 namespace Spiral\Tests\Models;
 
 use PHPUnit\Framework\TestCase;
+use Spiral\Models\ModelSchema;
 use Spiral\Models\SchematicEntity;
 
 class SchematicEntityTest extends TestCase
 {
     public function testFillable(): void
     {
-        $schema = [SchematicEntity::SH_SECURED => []];
+        $schema = [ModelSchema::SECURED => []];
 
         $data = ['a' => 1, 'b' => 2, 'c' => 3];
 
@@ -29,7 +30,7 @@ class SchematicEntityTest extends TestCase
 
     public function testFillable2(): void
     {
-        $schema = [SchematicEntity::SH_FILLABLE => '*'];
+        $schema = [ModelSchema::FILLABLE => '*'];
 
         $data = ['a' => 1, 'b' => 2, 'c' => 3];
 
@@ -40,7 +41,7 @@ class SchematicEntityTest extends TestCase
 
     public function testSecured(): void
     {
-        $schema = [SchematicEntity::SH_SECURED => '*'];
+        $schema = [ModelSchema::SECURED => '*'];
 
         $data = ['a' => 1, 'b' => 2, 'c' => 3];
 
@@ -52,8 +53,8 @@ class SchematicEntityTest extends TestCase
     public function testPartiallySecured(): void
     {
         $schema = [
-            SchematicEntity::SH_SECURED  => '*',
-            SchematicEntity::SH_FILLABLE => ['a', 'b'],
+            ModelSchema::SECURED  => '*',
+            ModelSchema::FILLABLE => ['a', 'b'],
         ];
 
         $data = ['a' => 1, 'b' => 2, 'c' => 3];
@@ -66,7 +67,7 @@ class SchematicEntityTest extends TestCase
     public function getSetters(): void
     {
         $schema = [
-            SchematicEntity::SH_MUTATORS => [
+            ModelSchema::MUTATORS => [
                 'setter' => ['a' => 'intval'],
             ],
         ];
@@ -85,7 +86,7 @@ class SchematicEntityTest extends TestCase
     public function testGetters(): void
     {
         $schema = [
-            SchematicEntity::SH_MUTATORS => [
+            ModelSchema::MUTATORS => [
                 'getter' => ['a' => 'intval'],
             ],
         ];

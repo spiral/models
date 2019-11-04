@@ -16,18 +16,7 @@ namespace Spiral\Models;
  */
 class SchematicEntity extends AbstractEntity
 {
-    /**
-     * Schema constants. Starts with 2, but why not?
-     */
-    public const SH_SECURED  = 2;
-    public const SH_FILLABLE = 3;
-    public const SH_MUTATORS = 4;
-
-    /**
-     * Behaviour schema.
-     *
-     * @var array
-     */
+    /** @var array */
     private $schema = [];
 
     /**
@@ -45,19 +34,19 @@ class SchematicEntity extends AbstractEntity
      */
     protected function isFillable(string $field): bool
     {
-        if (!empty($this->schema[self::SH_FILLABLE]) && $this->schema[self::SH_FILLABLE] === '*') {
+        if (!empty($this->schema[ModelSchema::FILLABLE]) && $this->schema[ModelSchema::FILLABLE] === '*') {
             return true;
         }
 
-        if (!empty($this->schema[self::SH_FILLABLE])) {
-            return in_array($field, $this->schema[self::SH_FILLABLE]);
+        if (!empty($this->schema[ModelSchema::FILLABLE])) {
+            return in_array($field, $this->schema[ModelSchema::FILLABLE]);
         }
 
-        if (!empty($this->schema[self::SH_SECURED]) && $this->schema[self::SH_SECURED] === '*') {
+        if (!empty($this->schema[ModelSchema::SECURED]) && $this->schema[ModelSchema::SECURED] === '*') {
             return false;
         }
 
-        return !in_array($field, $this->schema[self::SH_SECURED]);
+        return !in_array($field, $this->schema[ModelSchema::SECURED]);
     }
 
     /**
@@ -65,8 +54,8 @@ class SchematicEntity extends AbstractEntity
      */
     protected function getMutator(string $field, string $mutator)
     {
-        if (isset($this->schema[self::SH_MUTATORS][$mutator][$field])) {
-            return $this->schema[self::SH_MUTATORS][$mutator][$field];
+        if (isset($this->schema[ModelSchema::MUTATORS][$mutator][$field])) {
+            return $this->schema[ModelSchema::MUTATORS][$mutator][$field];
         }
 
         return null;

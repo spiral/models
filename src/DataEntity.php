@@ -100,13 +100,13 @@ class DataEntity extends AbstractEntity
     {
         $target = [];
         switch ($mutator) {
-            case self::MUTATOR_ACCESSOR:
+            case ModelSchema::MUTATOR_ACCESSOR:
                 $target = static::ACCESSORS;
                 break;
-            case self::MUTATOR_GETTER:
+            case ModelSchema::MUTATOR_GETTER:
                 $target = static::GETTERS;
                 break;
-            case self::MUTATOR_SETTER:
+            case ModelSchema::MUTATOR_SETTER:
                 $target = static::SETTERS;
                 break;
         }

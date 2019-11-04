@@ -20,10 +20,6 @@ use Spiral\Models\Exception\EntityException;
  */
 abstract class AbstractEntity implements EntityInterface, ValueInterface, \IteratorAggregate
 {
-    protected const MUTATOR_GETTER   = 'getter';
-    protected const MUTATOR_SETTER   = 'setter';
-    protected const MUTATOR_ACCESSOR = 'accessor';
-
     /** @var array */
     private $fields = [];
 
@@ -114,7 +110,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         }
 
         //Checking if field have accessor
-        $accessor = $this->getMutator($name, self::MUTATOR_ACCESSOR);
+        $accessor = $this->getMutator($name, ModelSchema::MUTATOR_ACCESSOR);
 
         if ($accessor !== null) {
             //Setting value thought associated accessor
@@ -142,7 +138,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
         }
 
         //Checking if field have accessor (decorator)
-        $accessor = $this->getMutator($name, self::MUTATOR_ACCESSOR);
+        $accessor = $this->getMutator($name, ModelSchema::MUTATOR_ACCESSOR);
 
         if (!empty($accessor)) {
             return $this->fields[$name] = $this->createValue($accessor, $name, $value);
@@ -344,7 +340,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
     /**
      * Create instance of field accessor.
      *
-     * @param mixed|string $type Might be entity implementation specific.
+     * @param mixed|string $type    Might be entity implementation specific.
      * @param string       $name
      * @param mixed        $value
      * @param array        $context Custom accessor context.
@@ -379,7 +375,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      */
     private function getMutated(string $name, bool $filter, $value)
     {
-        $getter = $this->getMutator($name, self::MUTATOR_GETTER);
+        $getter = $this->getMutator($name, ModelSchema::MUTATOR_GETTER);
 
         if ($filter && !empty($getter)) {
             try {
@@ -401,7 +397,7 @@ abstract class AbstractEntity implements EntityInterface, ValueInterface, \Itera
      */
     private function setMutated(string $name, $value): void
     {
-        $setter = $this->getMutator($name, self::MUTATOR_SETTER);
+        $setter = $this->getMutator($name, ModelSchema::MUTATOR_SETTER);
 
         if (!empty($setter)) {
             try {
