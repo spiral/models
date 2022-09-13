@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Spiral Framework.
- *
- * @license   MIT
- * @author    Anton Titov (Wolfy-J)
- */
-
 declare(strict_types=1);
 
 namespace Spiral\Tests\Models;
@@ -27,12 +20,14 @@ class NameValue implements ValueInterface
         return $this->value;
     }
 
-    public function setValue($data): void
+    public function setValue(mixed $data): self
     {
         $this->value = strtoupper($data);
+
+        return $this;
     }
 
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
