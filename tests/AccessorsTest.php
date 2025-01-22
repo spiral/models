@@ -14,26 +14,26 @@ class AccessorsTest extends TestCase
     {
         $e = new AccessedEntity();
         $e->name = 'antony';
-        self::assertSame('ANTONY', (string)$e->name);
+        $this->assertSame('ANTONY', (string)$e->name);
 
         $e->setFields(['name' => 'bob']);
-        self::assertSame('BOB', (string)$e->name);
+        $this->assertSame('BOB', (string)$e->name);
 
-        self::assertSame([
+        $this->assertSame([
             'name' => 'BOB',
         ], $e->getValue());
 
-        self::assertSame([
+        $this->assertSame([
             'name' => 'BOB',
         ], $e->jsonSerialize());
 
-        self::assertEquals([
+        $this->assertEquals([
             'name' => new NameValue('bob'),
         ], $e->getFields());
 
         $e->name = new NameValue('mike');
 
-        self::assertEquals([
+        $this->assertEquals([
             'name' => new NameValue('mike'),
         ], $e->getFields());
     }
@@ -41,10 +41,10 @@ class AccessorsTest extends TestCase
     public function testGetAccessor(): void
     {
         $e = new AccessedEntity();
-        self::assertSame('', (string)$e->name);
-        self::assertInstanceOf(NameValue::class, $e->name);
+        $this->assertSame('', (string)$e->name);
+        $this->assertInstanceOf(NameValue::class, $e->name);
 
-        self::assertEquals([
+        $this->assertEquals([
             'name' => new NameValue(null),
         ], $e->getFields());
 
@@ -54,7 +54,7 @@ class AccessorsTest extends TestCase
     public function testReflection(): void
     {
         $s = new ReflectionEntity(AccessedEntity::class);
-        self::assertSame([
+        $this->assertSame([
             'name' => NameValue::class,
         ], $s->getAccessors());
     }
