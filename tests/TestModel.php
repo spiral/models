@@ -13,5 +13,7 @@ class TestModel extends SchematicEntity
     protected $getters  = ['value' => 'intval'];
     protected $secured  = '*';
 
-    protected function methodA(): void {}
+    protected function methodA(): void
+    {
+    }
 }
