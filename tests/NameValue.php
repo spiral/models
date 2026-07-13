@@ -6,23 +6,18 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\ValueInterface;
 
-class NameValue implements ValueInterface
+class NameValue implements ValueInterface, \Stringable
 {
     private $value;
 
     public function __construct($value)
     {
-        $this->setValue((string)$value);
-    }
-
-    public function __toString(): string
-    {
-        return $this->value;
+        $this->setValue((string) $value);
     }
 
     public function setValue(mixed $data): self
     {
-        $this->value = strtoupper($data);
+        $this->value = \strtoupper((string) $data);
 
         return $this;
     }
@@ -35,5 +30,10 @@ class NameValue implements ValueInterface
     public function jsonSerialize()
     {
         return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->value;
     }
 }
