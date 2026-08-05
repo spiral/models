@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\DataEntity;
 
-final class SchemaModelC extends DataEntity
+class SchemaModelC extends DataEntity
 {
     protected $schema = ['nice2'];
 }

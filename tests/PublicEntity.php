@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\DataEntity;
 
-final class PublicEntity extends DataEntity
+class PublicEntity extends DataEntity
 {
     protected const FILLABLE = '*';
 

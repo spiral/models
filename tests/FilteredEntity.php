@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\DataEntity;
 
-final class FilteredEntity extends DataEntity
+class FilteredEntity extends DataEntity
 {
     protected const FILLABLE = ['id'];
     protected const SETTERS  = ['id' => 'intval'];

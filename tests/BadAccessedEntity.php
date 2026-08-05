@@ -6,7 +6,7 @@ namespace Spiral\Tests\Models;
 
 use Spiral\Models\DataEntity;
 
-final class BadAccessedEntity extends DataEntity
+class BadAccessedEntity extends DataEntity
 {
     protected const FILLABLE  = '*';
     protected const ACCESSORS = [
